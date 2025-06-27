@@ -1,0 +1,11 @@
+--class-path haxelib
+--class-path jam
+
+--library utest
+--library peote-view
+
+--main UnitTests
+
+--interp
+
+-D no-deprecation-warnings

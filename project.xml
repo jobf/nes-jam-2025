@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	
+	<meta title="kiss" package="kiss" version="0.1.0" company="v_v" />
+	
+	<android target-sdk-version="28" />
+	<!-- <meta build-number="714" /> --> <!-- let set the buildnumber manual (android) -->
+	
+	<!-- <template path="custom-templates"/> didn't work ? -->
+	<!-- instead we overwrite with a pre generated index.html after the build -->
+	<postbuild command="cp custom-index/index.html _dist/html5/bin/index.html" if="html5" />
+	<define name="resWidth" value="256" />
+	<define name="resHeight" value="240" />
+
+	<!-- <window fps="60" width="800" height="600" vsync="true" antialiasing="4" resizable="true" depth-buffer="true" stencil-buffer="false" /> -->
+	<window width="512" height="480" vsync="true" allowHighDPI="false" />
+	<!-- <window width="1024" height="960" vsync="true" allowHighDPI="false" /> -->
+	<window if="html5||android" width="0" height="0" />
+	
+	<!-- <app main="Test" path="_dist-test" file="Main" /> -->
+	<app main="Main" path="_dist" file="Main" />
+	<app main="Main" path="_distWin" file="Main" if="windows"/>
+	<!-- <app main="TestPaletteMaps" path="_dist" file="Main" /> -->
+	<!-- <define name="stats" if="html5" /> -->
+	
+	<!-- <source path="poth" /> -->
+	<source path="jam" />
+	<assets path="jam/assets" rename="assets" exclude="scratch" embed="true"/>
+	<!-- <icon path="assets/lime.svg" /> -->
+
+	
+	<haxelib name="lime" />	
+	<haxelib name="peote-view" />
+	<haxelib name="input2action" />	
+	<haxelib name="deepnightLibs" />
+	<haxelib name="ldtk-haxe-api" />
+
+	<!-- enable hot reload of level data -->
+	<haxedef name="hotreload" if="desktop" />
+
+	<!-- disable traces for final build -->
+	<haxedef name="no-traces" if="final" />
+	
+	<!-- force compiling for a special opengl-es version (only set one of them) -->
+	<!-- this optimizes the build and forces no-runtimecheck for the gl-features -->
+	<!-- <haxedef name="peoteview_es3" if="html5" /> -->
+	<haxedef name="peoteview_es2" if="android" /> <!-- android autodetect es3 but did not work, so force to es2 -->
+	
+	<!-- use special gl-features for optimization (if supported by opengl-es version) -->
+	<haxedef name="peoteview_uniformbuffers" />
+	<haxedef name="peoteview_instancedrawing" />
+	<haxedef name="peoteview_vertexarrayobjects" />
+
+	<haxelib name="kiss" path="haxelib" />
+	<haxelib name="nes" path="hl2" />
+
+	<!--<haxedef name="peoteview_debug_macro" />-->
+	<!--<haxedef name="peoteview_debug_buffer" />-->
+	<!--<haxedef name="peoteview_debug_view" />-->
+	<!--<haxedef name="peoteview_debug_display" />-->
+	<!--<haxedef name="peoteview_debug_program" />-->
+	<!--<haxedef name="peoteview_debug_texture" />-->
+	<!--<haxedef name="peoteview_debug_shader" />-->
+
+	<haxeflag name="-dce" value="full" />
+	<!-- <haxedef name="webgl-debug" /> --> <!-- try with chrome and look here: https://www.khronos.org/webgl/wiki/Debugging -->
+	<!-- <haxedef name="source-map-content" /> --> <!-- to debug with chrome id needs also "-debug" -->
+	
+	
+</project>
