@@ -421,6 +421,24 @@ class TileSetter
 	{
 		palettes.debug(uncoloredDisplay, colorsDisplay);
 	}
+
+	public function setTile(col:Int, row:Int, tile:TileIndex)
+	{
+		var i = Nametable.tileCols.index(col, row);
+		var back = levelBack.getElement(i);
+		var front = levelFront.getElement(i);
+
+		if (tile.layer() == 0) // tile is background
+		{
+			back.tile = tile.index();
+			front.tile = TileSetter.EmptySpriteId;
+		}
+		else
+		{
+			back.tile = TileSetter.EmptySpriteId;
+			front.tile = tile.index();
+		}
+	}
 }
 
 function expandArray(blocks:Array<Int>, blockWidth:Int = 16):Vector<Int>
