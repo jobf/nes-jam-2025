@@ -1,4 +1,4 @@
-import kiss.graphics.AnimateScenery;
+import kiss.graphics.AnimateMosaic;
 import nes.Nametable.TileIndex;
 import peote.view.TextureData;
 import lime.utils.Assets;
@@ -124,7 +124,7 @@ class TestScenery extends Application
 			frame_rate: 4,
 			frame_width: 4
 		}
-		var animator = new AnimateScenery([animation.f_Name => config], tiles.setTile, column, row);
+		var animator = new AnimateMosaic([animation.f_Name => config], tiles.setTile, column, row);
 		animator.play_animation(animation.f_Name);
 
 		// send element data to GPU

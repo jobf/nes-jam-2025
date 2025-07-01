@@ -4,7 +4,7 @@ using kiss.util.Math.ValueExtensions;
 using kiss.util.Math.Grid2d;
 
 @:publicFields
-class AnimateScenery
+class AnimateMosaic
 {
 	var data:Map<String, AnimationConfig>;
 	var now_playing:AnimationConfig;
@@ -39,11 +39,10 @@ class AnimateScenery
 	}
 
 	function change_frame() {
-		trace(now_playing.frames[position]);
 		for (i => tile in now_playing.frames[position]) {
-			// var col = ;
-			// var row = row;
-			change_tile(column + now_playing.frame_width.column(i), row + now_playing.frame_width.row(i), tile);
+			var c = column + now_playing.frame_width.column(i);
+			var r = row + now_playing.frame_width.row(i);
+			change_tile(c, r, tile);
 		}
 	}
 
