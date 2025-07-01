@@ -5,7 +5,7 @@ package nes;
  * The highest bit is which layer the tile is, back or front
  * e.g. Bit 31: Layer, Bits 0-30: Index
  */
-abstract TileIndex(Int)
+abstract TileIndex(Int) from Int
 {
 	public function new(layer:Int, tile:Int)
 	{

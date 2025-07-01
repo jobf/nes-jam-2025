@@ -1,3 +1,4 @@
+import kiss.graphics.AnimateScenery;
 import nes.Nametable.TileIndex;
 import peote.view.TextureData;
 import lime.utils.Assets;
@@ -74,8 +75,63 @@ class TestScenery extends Application
 			window.onMouseMove.add((x, y) -> sprite.move(x / peoteView.zoom, y / peoteView.zoom));
 		}
 
+		var ldtk_data = new LdtkData();
+		var level = ldtk_data.worlds[0].levels[5];
+		var animation = level.l_Entities.all_Animation.filter(animation -> animation.f_Name == "Frog")[0];
+		var frames:Array<Array<Int>> = [];
+		var frameCount = Std.int(animation.width / animation.f_FrameWidth);
+		var frameColumns = Std.int(animation.f_FrameWidth / 8);
+		var frameRows = Std.int(animation.f_FrameHeight / 8);
+
+		for(n in 0...frameCount)
+		{
+			var frameTiles:Array<Int> = [];
+			var left = n * frameColumns;
+			var right = left + frameColumns;
+			for(r in 0...frameRows){
+				for(c in left...right)	{
+					var col = c + animation.cx;
+					var row = r + animation.cy;
+					var tile:Int = 0;
+					if(level.l_Tiles.hasAnyTileAt(col, row)){
+						var stack = level.l_Tiles.getTileStackAt(col, row);
+						tile = stack[stack.length - 1].tileId;
+					}
+					frameTiles.push(tile);
+				}
+			}
+			frames.push(frameTiles);
+		}
+
+		trace(frames);
+
+
+		var scenery = new Scenery({
+			x: 64,
+			y: 64,
+			width: animation.f_FrameWidth,
+			height: animation.f_FrameHeight
+		});
+
+		scenery.arrange(frames[0]);
+		scenery.draw(tiles.setTile);
+
+		var column:Int = Std.int(64 / 8);
+		var row:Int = Std.int(64 /8);
+		var config:AnimationConfig = {
+			mode: LOOP_TIMED,
+			frames: frames,
+			frame_rate: 4,
+			frame_width: 4
+		}
+		var animator = new AnimateScenery([animation.f_Name => config], tiles.setTile, column, row);
+		animator.play_animation(animation.f_Name);
+
 		// send element data to GPU
-		onUpdate.add(i -> tiles.draw());
+		onUpdate.add(i ->{ 
+			animator.step();
+			tiles.draw();
+		});
 
 		// window.onKeyDown.add((code, modifier) -> switch code
 		// {
