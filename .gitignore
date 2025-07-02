@@ -2,3 +2,5 @@ _dist*
 scratch
 secrets
 bin
+**/assets-final
+*.zip

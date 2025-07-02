@@ -5,7 +5,11 @@ import nes.Nametable;
 /** 
  * Generates typed data from LDtk level file, see https://ldtk.io/docs/game-dev/haxe-in-game-api/usage/ 
  */
+#if final
+private typedef _Tmp = haxe.macro.MacroType<[ldtk.Project.build("jam/assets-final/levels.ldtk")]>;
+#else
 private typedef _Tmp = haxe.macro.MacroType<[ldtk.Project.build("jam/assets/levels.ldtk")]>;
+#end
 
 /**
  * Loads the LdtkData and watches the file for changes.

@@ -9,6 +9,7 @@
 	<!-- <template path="custom-templates"/> didn't work ? -->
 	<!-- instead we overwrite with a pre generated index.html after the build -->
 	<postbuild command="cp custom-index/index.html _dist/html5/bin/index.html" if="html5" />
+	
 	<define name="resWidth" value="256" />
 	<define name="resHeight" value="240" />
 
@@ -21,14 +22,14 @@
 	<app main="Main" path="_dist" file="Main" />
 	<app main="Main" path="_distWin" file="Main" if="windows"/>
 	<!-- <app main="TestPaletteMaps" path="_dist" file="Main" /> -->
-	<app main="TestScenery" path="_dist" file="Main" />
+	<!-- <app main="TestScenery" path="_dist" file="Main" /> -->
 	<!-- <define name="stats" if="html5" /> -->
 	
 	<!-- <source path="poth" /> -->
 	<source path="jam" />
-	<assets path="jam/assets" rename="assets" exclude="scratch" embed="true"/>
-	<!-- <icon path="assets/lime.svg" /> -->
-
+	<assets path="jam/assets" rename="assets" exclude="scratch|tooling|palette.png" embed="true" unless="final"/>
+	<!-- for final builds we use pre-processed assets, see build-release.sh -->
+	<assets path="jam/assets-final" rename="assets" exclude="scratch|tooling|palette.png" embed="true" if="final"/>
 	
 	<haxelib name="lime" />	
 	<haxelib name="peote-view" />
