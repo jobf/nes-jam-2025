@@ -1,3 +1,4 @@
+import kiss.graphics.AnimateTile;
 import ldtk.Json;
 import ldtk.*;
 import nes.Nametable;
@@ -159,4 +160,47 @@ function convertToTileId(infos:Null<TilesetRect>, cellSize:Int = 8, tilesInRow:I
 	var c = Std.int(infos.x / cellSize);
 	var r = Std.int(infos.y / cellSize);
 	return kiss.util.Math.Grid2d.index(tilesInRow, c, r);
+}
+
+function read_animations(definitions:Array<LdtkData.Entity_Animation>, tiles:ldtk.Layer_Tiles):Map<String, MosaicConfig>
+{
+	var animations:Map<String, MosaicConfig> = [];
+	for (animation in definitions)
+	{
+		var frames:Array<Array<Int>> = [];
+		var frameCount = Std.int(animation.width / animation.f_FrameWidth);
+		var frameColumns = Std.int(animation.f_FrameWidth / 8);
+		var frameRows = Std.int(animation.f_FrameHeight / 8);
+
+		for (n in 0...frameCount)
+		{
+			var frameTiles:Array<Int> = [];
+			var left = n * frameColumns;
+			var right = left + frameColumns;
+			for (r in 0...frameRows)
+			{
+				for (c in left...right)
+				{
+					var col = c + animation.cx;
+					var row = r + animation.cy;
+					var tile:Int = 0;
+					if (tiles.hasAnyTileAt(col, row))
+					{
+						var stack = tiles.getTileStackAt(col, row);
+						tile = stack[stack.length - 1].tileId;
+					}
+					frameTiles.push(tile);
+				}
+			}
+			frames.push(frameTiles);
+		}
+
+		animations.set(animation.f_Name, {
+			mode: ONCE_STEPPED,
+			frames: frames,
+			frame_columns: Std.int(animation.f_FrameWidth / tiles.gridSize)
+		});
+		
+	}
+	return animations;
 }

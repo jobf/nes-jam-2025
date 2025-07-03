@@ -1,3 +1,4 @@
+import kiss.graphics.AnimateTile;
 import Actor;
 import Emitter;
 import LdtkData;
@@ -5,7 +6,9 @@ import nes.Tiles;
 import kiss.App;
 import kiss.graphics.Quad;
 import kiss.input.Controller;
+
 using kiss.util.Math.Grid2d;
+
 import kiss.util.Math;
 import kiss.util.Rectangle;
 import kiss.util.Repeat;
@@ -14,7 +17,6 @@ import peote.view.Color;
 import peote.view.Display;
 import peote.view.text.Text;
 import peote.view.TextureData;
-
 
 class Main extends App
 {
@@ -241,7 +243,7 @@ class Main extends App
 				if (hotspot.style == TUTOR)
 				{
 					hotspot.isEnabled = true;
-					hotspot.sprite.changeTile(hotspot.tileStart);
+					hotspot.showInitialFrame();
 					help.setMessages(["5000:Approach the frog!"]);
 				}
 			}
@@ -264,18 +266,18 @@ class Main extends App
 		help.isEnabled = level.f_Messages.length > 0;
 
 		return [
-			for (h in hotspots)
+			for (hotspotDef in hotspots)
 			{
 				var footprint:Rectangle = {
-					x: Std.int(h.cx * 8),
-					y: Std.int(h.cy * 8),
-					width: h.width,
-					height: h.height
+					x: Std.int(hotspotDef.cx * 8),
+					y: Std.int(hotspotDef.cy * 8),
+					width: hotspotDef.width,
+					height: hotspotDef.height
 				}
 				var onUnlock:() -> Void = null;
-				var duration = msToFrames(h.f_UnlockDurationMs);
+				var duration = msToFrames(hotspotDef.f_UnlockDurationMs);
 				var sprite = tiles.sprite();
-				switch h.f_HotspotStyle
+				switch hotspotDef.f_HotspotStyle
 				{
 					case FROG:
 						totalFrogs++;
@@ -286,9 +288,9 @@ class Main extends App
 							help.clearMessages();
 						}
 					case UNBLOCK:
-						if (h.f_Blockage != null)
+						if (hotspotDef.f_Blockage != null)
 						{
-							var blockage = level.l_Entities.all_Blockage.filter(entity -> entity.iid == h.f_Blockage.entityIid)[0];
+							var blockage = level.l_Entities.all_Blockage.filter(entity -> entity.iid == hotspotDef.f_Blockage.entityIid)[0];
 							if (blockage != null)
 							{
 								duration = msToFrames(blockage.f_UnlockDurationMs);
@@ -318,7 +320,13 @@ class Main extends App
 						}
 				}
 
-				new Hotspot(footprint, sprite, duration, h.f_HotspotStyle, onUnlock);
+				var entityLevel = hotReload.ldtk_data.worlds[0].levels[5];
+				var animations = read_animations(entityLevel.l_Entities.all_Animation, level.l_Tiles);
+				var sprite = new Scenery(footprint);
+				var animation = new AnimateMosaic(["Frog" => animations["Frog"]], tiles.setTile, hotspotDef.cx, hotspotDef.cy);
+				animation.play_animation("Frog");
+
+				new Hotspot(footprint, sprite, animation, duration, hotspotDef.f_HotspotStyle, onUnlock);
 			}
 		];
 	}
@@ -686,6 +694,7 @@ class Main extends App
 						continue;
 
 					spot.update();
+					spot.sprite.draw(tiles.setTile);
 
 					if (spot.style == FROG || spot.style == TUTOR && spot.isLocked)
 					{
@@ -705,7 +714,8 @@ class Main extends App
 								kisser.x_start = spot.footprint.center_x;
 								kisser.y_start = spot.footprint.center_y - 10;
 								kissEmit.remaining--;
-								if(kissEmit.remaining < 0){
+								if (kissEmit.remaining < 0)
+								{
 									kissEmit.reset();
 									kisser.emitParticle(tiles.sprite());
 								}
@@ -761,10 +771,10 @@ class Main extends App
 						}
 						for (hotspot in locks)
 						{
-							if (isUnderWaterLevel(hotspot.sprite.tileF.y))
+							if (isUnderWaterLevel(hotspot.footprint.top))
 							{
-								hotspot.sprite.tileB.changeBgPalette(1); // 1 is the flooded (underwater) palette
-								hotspot.sprite.tileF.changeBgPalette(1); // 1 is the flooded (underwater) palette
+								hotspot.sprite.changePalette(1); // 1 is the flooded (underwater) palette
+								// hotspot.sprite.tileF.changeBgPalette(1); // 1 is the flooded (underwater) palette
 							}
 						}
 

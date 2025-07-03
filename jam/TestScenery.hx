@@ -1,12 +1,13 @@
-import kiss.graphics.AnimateMosaic;
-import nes.Nametable.TileIndex;
-import peote.view.TextureData;
-import lime.utils.Assets;
-import nes.Tiles.TileSetter;
+import kiss.graphics.AnimateTile;
 import kiss.graphics.PeoteView;
+import LdtkData.read_animations;
 import lime.app.Application;
+import lime.utils.Assets;
+import nes.Nametable.TileIndex;
 import nes.Palette;
+import nes.Tiles.TileSetter;
 import peote.view.Display;
+import peote.view.TextureData;
 
 class TestScenery extends Application
 {
@@ -62,7 +63,7 @@ class TestScenery extends Application
 		]);
 		scenery.draw(tiles.setTile);
 
-		// // sprite for moving around to check background/foreground
+		// sprite for moving around to check background/foreground
 		var sprite = tiles.sprite();
 		if (sprite == null)
 		{
@@ -78,74 +79,34 @@ class TestScenery extends Application
 		var ldtk_data = new LdtkData();
 		var level = ldtk_data.worlds[0].levels[5];
 		var animation = level.l_Entities.all_Animation.filter(animation -> animation.f_Name == "Frog")[0];
-		var frames:Array<Array<Int>> = [];
-		var frameCount = Std.int(animation.width / animation.f_FrameWidth);
-		var frameColumns = Std.int(animation.f_FrameWidth / 8);
-		var frameRows = Std.int(animation.f_FrameHeight / 8);
-
-		for(n in 0...frameCount)
-		{
-			var frameTiles:Array<Int> = [];
-			var left = n * frameColumns;
-			var right = left + frameColumns;
-			for(r in 0...frameRows){
-				for(c in left...right)	{
-					var col = c + animation.cx;
-					var row = r + animation.cy;
-					var tile:Int = 0;
-					if(level.l_Tiles.hasAnyTileAt(col, row)){
-						var stack = level.l_Tiles.getTileStackAt(col, row);
-						tile = stack[stack.length - 1].tileId;
-					}
-					frameTiles.push(tile);
-				}
-			}
-			frames.push(frameTiles);
-		}
-
-		trace(frames);
-
-
-		var scenery = new Scenery({
-			x: 64,
-			y: 64,
-			width: animation.f_FrameWidth,
-			height: animation.f_FrameHeight
-		});
-
-		scenery.arrange(frames[0]);
-		scenery.draw(tiles.setTile);
+		var animations = read_animations(level.l_Entities.all_Animation, level.l_Tiles);
+		var frog = animations["Frog"];
+		trace(frog.frames);
 
 		var column:Int = Std.int(64 / 8);
 		var row:Int = Std.int(64 /8);
-		var config:AnimationConfig = {
-			mode: LOOP_TIMED,
-			frames: frames,
-			frame_rate: 4,
-			frame_width: 4
-		}
-		var animator = new AnimateMosaic([animation.f_Name => config], tiles.setTile, column, row);
+		
+		var animator = new AnimateMosaic([animation.f_Name => frog], tiles.setTile, column, row);
 		animator.play_animation(animation.f_Name);
 
 		// send element data to GPU
 		onUpdate.add(i ->{ 
-			animator.step();
 			tiles.draw();
 		});
 
-		// window.onKeyDown.add((code, modifier) -> switch code
-		// {
-		// 	case NUMBER_0:
-		// 	case NUMBER_1:
-		// 	case NUMBER_2:
-		// 	case NUMBER_3:
-		// 	case NUMBER_4:
-		// 	case NUMBER_5:
-		// 	case NUMBER_6:
-		// 	case NUMBER_7:
-		// 	case NUMBER_8:
-		// 	case NUMBER_9:
-		// 	case _: return;
-		// });
+		window.onKeyDown.add((code, modifier) -> switch code
+		{
+			case NUMBER_0: animator.step();
+			case NUMBER_1:
+			case NUMBER_2:
+			case NUMBER_3:
+			case NUMBER_4:
+			case NUMBER_5:
+			case NUMBER_6:
+			case NUMBER_7:
+			case NUMBER_8:
+			case NUMBER_9:
+			case _: return;
+		});
 	}
 }

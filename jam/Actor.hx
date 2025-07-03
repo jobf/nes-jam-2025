@@ -59,7 +59,7 @@ class Actor
 			coyote_step_count: stats.jumpFramesCoyote
 		}
 		movement = new PlatformerMovement(grid_x, grid_y, cell_size_px, getCollisionId);
-		var anims:Map<String, AnimationConfig> = [
+		var anims:Map<String, TileConfig> = [
 			"idle" => {
 				frames: [0],
 				frame_rate: 1000

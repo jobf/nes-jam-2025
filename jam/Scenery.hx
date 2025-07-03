@@ -42,4 +42,8 @@ class Scenery
 			}
 		}
 	}
+
+	public function flipX(bool:Bool) {
+		//todo
+	}
 }
