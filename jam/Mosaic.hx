@@ -1,7 +1,7 @@
 import nes.Nametable;
 import kiss.util.Rectangle;
 
-class Scenery
+class Mosaic
 {
 	var footprint:Rectangle;
 	var cols:Int;
@@ -16,7 +16,7 @@ class Scenery
 		this.tileSize = tileSize;
 		cols = Std.int(footprint.width / tileSize);
 		rows = Std.int(footprint.height / tileSize);
-		tiles = [for(n in 0...cols * rows) defaultTile ?? Scenery.defaultTile];
+		tiles = [for(n in 0...cols * rows) defaultTile ?? Mosaic.defaultTile];
 	}
 
 	public function arrange(tiles:Array<TileIndex>)

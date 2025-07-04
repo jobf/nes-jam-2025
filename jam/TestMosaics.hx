@@ -28,7 +28,7 @@ class TestMosaics extends Application
 		tiles.addToDisplay(uncoloredDisplay);
 
 		/** this will be background scenery and default tiles **/
-		var scenery = new Scenery({
+		var scenery = new Mosaic({
 			x: 0,
 			y: 0,
 			width: 32,
@@ -37,7 +37,7 @@ class TestMosaics extends Application
 		scenery.draw(tiles.setLevelTile);
 
 		/** this will be foreground scenery **/
-		var scenery = new Scenery({
+		var scenery = new Mosaic({
 			x: 64,
 			y: 16,
 			width: 16,
@@ -50,7 +50,7 @@ class TestMosaics extends Application
 		scenery.draw(tiles.setLevelTile);
 
 		/** this will be background scenery **/
-		var scenery = new Scenery({
+		var scenery = new Mosaic({
 			x: 16,
 			y: 64,
 			width: 6 * 8,
