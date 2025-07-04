@@ -85,7 +85,7 @@ class Tutorial
 			text.text = parseMessage(messages[index]);
 			var width = text.text.length * 8;
 			text.x = Std.int(128 - (width / 2));
-			text.y = sprite.tileF.y + 16;
+			text.y = sprite.tile.y + 16;
 			index = (index + 1).wrap(this.messages.length);
 			// trace(text.text);
 		}

@@ -315,8 +315,7 @@ class Main extends App
 							bubbler.mode = SOAP;
 							for (sprite in bubblesCollected)
 							{
-								sprite.tileB.changeBgPalette(3);
-								sprite.tileF.changeBgPalette(3);
+								sprite.changePalette(3);
 							}
 						}
 					case BUBBLE:
@@ -393,13 +392,11 @@ class Main extends App
 			sprite.changeTile(52);
 			if (bubbler.mode == SOAP)
 			{
-				sprite.tileB.changeBgPalette(3);
-				sprite.tileF.changeBgPalette(3);
+				sprite.changePalette(3);
 			}
 			else
 			{
-				sprite.tileB.changeBgPalette(0);
-				sprite.tileF.changeBgPalette(0);
+				sprite.changePalette(0);
 			}
 			sprite.move(x, y);
 			bubblesCollected.push(sprite);
@@ -439,8 +436,7 @@ class Main extends App
 					// spend a collected bubble
 					var sprite = bubblesCollected.pop();
 					sprite.changeTile(TileSetter.EmptySpriteId);
-					sprite.tileB.changeBgPalette(0);
-					sprite.tileF.changeBgPalette(0);
+					sprite.changePalette(0);
 
 				case SOAP:
 					if (bubble == null)
@@ -450,8 +446,7 @@ class Main extends App
 						bubbler.x_start = (player.movement.position.grid_x + offsetCol) * 8;
 						bubbler.y_start = player.movement.position.grid_y * 8;
 						bubble = bubbler.emitParticle(tiles.sprite());
-						bubble.sprite.tileB.changeBgPalette(3);
-						bubble.sprite.tileF.changeBgPalette(3);
+						bubble.sprite.changePalette(3);
 
 						// increase available breaths
 						if (breathsRemaining == 1)
@@ -462,8 +457,7 @@ class Main extends App
 						// spend a collected bubble
 						var sprite = bubblesCollected.pop();
 						sprite.changeTile(TileSetter.EmptySpriteId);
-						sprite.tileB.changeBgPalette(3);
-						sprite.tileF.changeBgPalette(3);
+						sprite.changePalette(3);
 					}
 			}
 		}
@@ -568,8 +562,7 @@ class Main extends App
 									help.showIntro(sprite);
 								case EXIT:
 									var sprite = tiles.sprite();
-									sprite.tileB.changeBgPalette(ent.f_PaletteIndex);
-									sprite.tileF.changeBgPalette(ent.f_PaletteIndex);
+									sprite.changePalette(ent.f_PaletteIndex);
 									sprite.changeTile(44);
 									sprite.move(ent.pixelX, ent.pixelY);
 							}
@@ -798,7 +791,7 @@ class Main extends App
 								if (breathsRemaining < 0)
 								{
 									state = DROWNED;
-									player.sprite.tileF.changeBgPalette(1);
+									player.sprite.changePalette(1);
 									waitCountdown.reset();
 								}
 							}

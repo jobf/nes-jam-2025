@@ -43,15 +43,9 @@ class Actor
 		this.sprite = sprite;
 		sprite.changeTile(0);
 		sprite.isUsed = true;
-		@:privateAccess
-		sprite.tileB.pivotX = 0.5;
-		@:privateAccess
-		sprite.tileF.pivotX = 0.5;
-		@:privateAccess
-		sprite.tileB.pivotY = 0.5;
-		@:privateAccess
-		sprite.tileF.pivotY = 0.5;
-
+		sprite.tile.pivotX = 0.5;
+		sprite.tile.pivotY = 0.5;
+		
 		var config:JumpConfig = {
 			height_tiles_max: stats.jumpHeightTilesMax,
 			ascent_step_count: stats.jumpFramesAscent,

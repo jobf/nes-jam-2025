@@ -9,7 +9,7 @@ import nes.Tiles.TileSetter;
 import peote.view.Display;
 import peote.view.TextureData;
 
-class TestScenery extends Application
+class TestMosaics extends Application
 {
 	override function onPreloadComplete()
 	{

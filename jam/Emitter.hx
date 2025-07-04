@@ -123,8 +123,7 @@ class Bubbler extends Emitter
 		}
 
 		sprite.changeTile(49);
-		sprite.tileB.changeBgPalette(0);
-		sprite.tileF.changeBgPalette(0);
+		sprite.tile.changeBgPalette(0);
 
 		var particle = new Particle(x_start, y_start, sprite);
 		particle.velX = 0.0;
@@ -142,7 +141,7 @@ class Bubbler extends Emitter
 	{
 		for (p in particles)
 		{
-			if (mode == SOAP && p.sprite.tileF.tile != solidTile)
+			if (mode == SOAP && p.sprite.tile.tile != solidTile)
 			{
 				p.sprite.changeTile(solidTile);
 				p.velY = 0;
@@ -176,7 +175,7 @@ class Bubbler extends Emitter
 		{
 			if (mode == SOAP)
 			{
-				if (p.age > 5 && p.sprite.tileF.tile != solidTile)
+				if (p.age > 5 && p.sprite.tile.tile != solidTile)
 				{
 					p.velY = -toPixelsPerFrame(50);
 				}
@@ -215,8 +214,7 @@ class Breather extends Emitter
 		}
 
 		sprite.changeTile(48);
-		sprite.tileB.changeBgPalette(0);
-		sprite.tileF.changeBgPalette(0);
+		sprite.changePalette(0);
 
 		var particle = new Particle(x_start, y_start, sprite);
 		particle.velX = 0.0;

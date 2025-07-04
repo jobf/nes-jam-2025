@@ -213,8 +213,7 @@ class TileSetter
 
 	public var sprites:Array<Sprite>;
 
-	var spritesBack:TileBuffer;
-	var spritesFront:TileBuffer;
+	var spriteTiles:TileBuffer;
 
 	public var palettes(default, null):PaletteMap;
 
@@ -264,8 +263,7 @@ class TileSetter
 		colorsDisplay.fbo.program.setColorFormula('mapToPalette(default_ID, palette_ID)');
 
 		levelBack.addToDisplay(colorsDisplay);
-		spritesBack.addToDisplay(colorsDisplay);
-		spritesFront.addToDisplay(colorsDisplay);
+		spriteTiles.addToDisplay(colorsDisplay);
 		levelFront.addToDisplay(colorsDisplay);
 		textOverlay.addToDisplay(colorsDisplay);
 	}
@@ -274,8 +272,7 @@ class TileSetter
 	{
 		levelBack.update();
 		levelFront.update();
-		spritesBack.update();
-		spritesFront.update();
+		spriteTiles.update();
 		textOverlay.updateAll();
 	}
 
@@ -300,8 +297,7 @@ class TileSetter
 
 	inline function initSpriteTileSetter(tiles:Texture):Void
 	{
-		spritesBack = new TileBuffer(spriteCount, tiles, palettes);
-		spritesFront = new TileBuffer(spriteCount, tiles, palettes);
+		spriteTiles = new TileBuffer(spriteCount, tiles, palettes);
 
 		sprites = [
 			for (n in 0...spriteCount)
@@ -313,8 +309,7 @@ class TileSetter
 				b.pivotX = 0.5;
 				b.pivotY = 0.5;
 				{
-					tileB: spritesBack.addElement(f),
-					tileF: spritesFront.addElement(b),
+					tile: spriteTiles.addElement(f),
 				}
 			}
 		];
@@ -367,10 +362,8 @@ class TileSetter
 				sprite.flipX(false);
 				sprite.flipY(false);
 				sprite.changeTile(TileSetter.EmptySpriteId);
-				sprite.tileB.pivotX = pivot;
-				sprite.tileB.pivotY = pivot;
-				sprite.tileF.pivotX = pivot;
-				sprite.tileF.pivotY = pivot;
+				sprite.tile.pivotX = pivot;
+				sprite.tile.pivotY = pivot;
 				return sprite;
 			}
 		}
@@ -385,8 +378,7 @@ class TileSetter
 			{
 				sprite.isUsed = false;
 				sprite.changeTile(TileSetter.EmptySpriteId);
-				sprite.tileB.changeBgPalette(0);
-				sprite.tileF.changeBgPalette(0);
+				sprite.tile.changeBgPalette(0);
 				sprite.move(-99, -99);
 			}
 		}
@@ -405,8 +397,7 @@ class TileSetter
 		var tex = Texture.fromData(data);
 		tex.tilesX = Std.int(data.width / spriteSize);
 		tex.tilesY = Std.int(data.height / spriteSize);
-		spritesBack.reloadTexture(tex);
-		spritesFront.reloadTexture(tex);
+		spriteTiles.reloadTexture(tex);
 		TileSetter.EmptySpriteId = tex.tilesX * tex.tilesY;
 	}
 
@@ -476,40 +467,33 @@ function expandArray(blocks:Array<Int>, blockWidth:Int = 16):Vector<Int>
 @:publicFields
 class Sprite
 {
-	var tileB:Tile;
-	var tileF:Tile;
+	var tile:Tile;
 	var isUsed:Bool = false;
 
 	function move(x:Float, y:Float)
 	{
-		tileB.x = Math.round(x);
-		tileB.y = Math.round(y);
-		tileF.x = Math.round(x);
-		tileF.y = Math.round(y);
+		tile.x = Math.round(x);
+		tile.y = Math.round(y);
 	}
 
 	function changePalette(index:Int)
 	{
 		// Bg palette is not technically available for Sprites so use Fg palette
-		tileB.changeFgPalette(index);
-		tileF.changeFgPalette(index);
+		tile.changeFgPalette(index);
 	}
 
 	function changeTile(index:Int)
 	{
-		tileB.tile = index;
-		tileF.tile = index;
+		tile.tile = index;
 	}
 
 	function flipX(isFlipped:Bool)
 	{
-		tileB.isFlippedX = isFlipped;
-		tileF.isFlippedX = isFlipped;
+		tile.isFlippedX = isFlipped;
 	}
 
 	function flipY(isFlipped:Bool)
 	{
-		tileB.isFlippedY = isFlipped;
-		tileF.isFlippedY = isFlipped;
+		tile.isFlippedY = isFlipped;
 	}
 }
