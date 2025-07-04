@@ -257,6 +257,10 @@ class Main extends App
 
 	function readHotspots(hotspots:Array<Entity_Hotspots>, collisionsCoarse:Array<Int>):Array<Hotspot>
 	{
+
+		var entityLevel = hotReload.ldtk_data.worlds[0].levels[5];
+		var animations = read_animations(entityLevel.l_Entities.all_Animation, entityLevel.l_Tiles);
+
 		frogsKissed = [];
 		totalFrogs = 0;
 		waterChangeCountdown = new Countdown(level.f_WaterRaiseDuration);
@@ -264,6 +268,7 @@ class Main extends App
 		bubblesCollected = [];
 		bubbler.mode = AIR; // default to air
 		help.isEnabled = level.f_Messages.length > 0;
+		var animationName:String = "Frog";
 
 		return [
 			for (hotspotDef in hotspots)
@@ -296,9 +301,11 @@ class Main extends App
 								duration = msToFrames(blockage.f_UnlockDurationMs);
 								blockPassage(blockage, collisionsCoarse, onUnlock);
 							}
+							animationName = "Unblock";
 						}
 					case SOAP:
 						duration = msToFrames(333);
+						animationName = "Soap";
 						onUnlock = () ->
 						{
 							soaper.emitParticle(tiles.sprite()); // todo: finish this
@@ -314,19 +321,15 @@ class Main extends App
 						}
 					case BUBBLE:
 						duration = 0;
+						animationName = "Bubble";
 						onUnlock = () ->
 						{
 							collectBubble();
 						}
 				}
 
-				var entityLevel = hotReload.ldtk_data.worlds[0].levels[5];
-				var animations = read_animations(entityLevel.l_Entities.all_Animation, level.l_Tiles);
-				var sprite = new Scenery(footprint);
-				var animation = new AnimateMosaic(["Frog" => animations["Frog"]], tiles.setTile, hotspotDef.cx, hotspotDef.cy);
-				animation.play_animation("Frog");
-
-				new Hotspot(footprint, sprite, animation, duration, hotspotDef.f_HotspotStyle, onUnlock);
+				var animation = new AnimateMosaic([animationName => animations[animationName]], tiles.setTile, hotspotDef.cx, hotspotDef.cy);
+				new Hotspot(footprint, animation, duration, hotspotDef.f_HotspotStyle, onUnlock);
 			}
 		];
 	}
@@ -694,11 +697,11 @@ class Main extends App
 						continue;
 
 					spot.update();
-					spot.sprite.draw(tiles.setTile);
 
 					if (spot.style == FROG || spot.style == TUTOR && spot.isLocked)
 					{
-						spot.sprite.flipX(player.movement.position.x < spot.footprint.center_x);
+						var isFlipped = player.movement.position.x < spot.footprint.center_x;
+						spot.animation.isFlipped = isFlipped;
 					}
 
 					if (spot.overlap(player.movement.position.x, player.movement.position.y))
@@ -767,14 +770,6 @@ class Main extends App
 							for (t in tiles)
 							{
 								t.changeBgPalette(1); // 1 is the flooded (underwater) palette
-							}
-						}
-						for (hotspot in locks)
-						{
-							if (isUnderWaterLevel(hotspot.footprint.top))
-							{
-								hotspot.sprite.changePalette(1); // 1 is the flooded (underwater) palette
-								// hotspot.sprite.tileF.changeBgPalette(1); // 1 is the flooded (underwater) palette
 							}
 						}
 

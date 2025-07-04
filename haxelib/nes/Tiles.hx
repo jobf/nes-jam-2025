@@ -422,11 +422,13 @@ class TileSetter
 		palettes.debug(uncoloredDisplay, colorsDisplay);
 	}
 
-	public function setTile(col:Int, row:Int, tile:TileIndex)
+	public function setTile(col:Int, row:Int, tile:TileIndex, isFlipped:Bool)
 	{
 		var i = Nametable.tileCols.index(col, row);
 		var back = levelBack.getElement(i);
+		back.isFlippedX = isFlipped;
 		var front = levelFront.getElement(i);
+		front.isFlippedX = isFlipped;
 
 		if (tile.layer() == 0) // tile is background
 		{

@@ -81,7 +81,7 @@ class TestScenery extends Application
 		var animation = level.l_Entities.all_Animation.filter(animation -> animation.f_Name == "Frog")[0];
 		var animations = read_animations(level.l_Entities.all_Animation, level.l_Tiles);
 		var frog = animations["Frog"];
-		trace(frog.frames);
+		// trace(frog.frames);
 
 		var column:Int = Std.int(64 / 8);
 		var row:Int = Std.int(64 /8);
@@ -97,9 +97,9 @@ class TestScenery extends Application
 		window.onKeyDown.add((code, modifier) -> switch code
 		{
 			case NUMBER_0: animator.step();
-			case NUMBER_1:
-			case NUMBER_2:
-			case NUMBER_3:
+			case NUMBER_1: animator.change_frame();
+			case NUMBER_2: animator.isFlipped = true;
+			case NUMBER_3: animator.isFlipped = false;
 			case NUMBER_4:
 			case NUMBER_5:
 			case NUMBER_6:

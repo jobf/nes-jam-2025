@@ -1,5 +1,8 @@
 package kiss.graphics;
 
+import nes.Tiles.TileSetter;
+import nes.Nametable;
+
 using kiss.util.Math;
 
 @:publicFields
@@ -101,20 +104,23 @@ class AnimateMosaic
 {
 	var data:Map<String, MosaicConfig>;
 	var now_playing:MosaicConfig;
-	var change_tile:(col:Int, row:Int, tile:Int) -> Void;
+	var change_tile:(col:Int, row:Int, tile:Int, isFlipped:Bool) -> Void;
 	var position:Int;
 	private var frames_remaining:Int;
 	var is_animation_ended:Bool = true;
 	var now_playing_name:String;
 	var column:Int;
 	var row:Int;
+	var isFlipped(default, set):Bool;
 
-	function new(data:Map<String, MosaicConfig>, change_tile:(col:Int, row:Int, tile:Int) -> Void, column:Int, row:Int)
+	function new(data:Map<String, MosaicConfig>, change_tile:(col:Int, row:Int, tile:Int, isFlipped:Bool) -> Void, column:Int, row:Int)
 	{
 		this.data = data;
 		this.change_tile = change_tile;
 		this.column = column;
 		this.row = row;
+		var anims = [for (k in data.keys()) k];
+		play_animation(anims[0]);
 	}
 
 	function play_animation(name:String):Void
@@ -133,11 +139,17 @@ class AnimateMosaic
 
 	function change_frame()
 	{
-		for (i => tile in now_playing.frames[position])
+		var tiles = now_playing.frames[position];
+		var cols = now_playing.frame_columns;
+		var colOffset = isFlipped ? cols - 1 : 0;
+		
+		for (n in 0...tiles.length)
 		{
-			var c = column + now_playing.frame_columns.column(i);
-			var r = row + now_playing.frame_columns.row(i);
-			change_tile(c, r, tile);
+			var r = row + cols.row(n);
+			var c = column + colOffset;
+			change_tile(c, r, tiles[n], isFlipped);
+			var direction = isFlipped ? -1 : 1;
+			colOffset = (colOffset + direction).wrap(cols);
 		}
 	}
 
@@ -189,6 +201,13 @@ class AnimateMosaic
 					return;
 			}
 		}
+	}
+
+	function set_isFlipped(value:Bool):Bool
+	{
+		isFlipped = value;
+		change_frame();
+		return isFlipped;
 	}
 }
 

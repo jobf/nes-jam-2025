@@ -27,7 +27,7 @@ class Scenery
 		}
 	}
 
-	public function draw(setTile:(col:Int, row:Int, tileIndex:TileIndex) -> Void)
+	public function draw(setTile:(col:Int, row:Int, tileIndex:TileIndex, isFlipped:Bool) -> Void)
 	{
 		var left = Std.int(footprint.left / tileSize);
 		var top = Std.int(footprint.top / tileSize);
@@ -37,7 +37,8 @@ class Scenery
 		{
 			for (c in left...left + cols)
 			{
-				setTile(c, r, tiles[i]);
+				var isFlipped = false;
+				setTile(c, r, tiles[i], isFlipped);
 				i++;
 			}
 		}
