@@ -413,7 +413,7 @@ class TileSetter
 		palettes.debug(uncoloredDisplay, colorsDisplay);
 	}
 
-	public function setTile(col:Int, row:Int, tile:TileIndex, isFlipped:Bool)
+	public function setLevelTile(col:Int, row:Int, tile:TileIndex, isFlipped:Bool)
 	{
 		var i = Nametable.tileCols.index(col, row);
 		var back = levelBack.getElement(i);

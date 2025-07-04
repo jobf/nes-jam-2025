@@ -327,7 +327,7 @@ class Main extends App
 						}
 				}
 
-				var animation = new AnimateMosaic([animationName => animations[animationName]], tiles.setTile, hotspotDef.cx, hotspotDef.cy);
+				var animation = new AnimateMosaic([animationName => animations[animationName]], tiles.setLevelTile, hotspotDef.cx, hotspotDef.cy);
 				new Hotspot(footprint, animation, duration, hotspotDef.f_HotspotStyle, onUnlock);
 			}
 		];
