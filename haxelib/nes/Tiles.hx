@@ -1,5 +1,6 @@
 package nes;
 
+import kiss.util.Rectangle;
 import kiss.util.Cycle;
 import nes.Nametable;
 import nes.Palette;
@@ -10,7 +11,6 @@ import peote.view.Element;
 import peote.view.Program;
 import peote.view.Texture;
 import peote.view.UniformFloat;
-
 
 @:publicFields
 class Tile implements Element
@@ -213,9 +213,11 @@ class TileSetter
 	var spriteCount = 64;
 	var nextSprite:Int;
 
-	
 	var spritesBuffer:TileBuffer;
+
 	public var spriteTiles:TileCycle;
+
+	var sprites:Array<SpriteLegacy> = [];
 
 	public var palettes(default, null):PaletteMap;
 
@@ -299,22 +301,22 @@ class TileSetter
 
 	inline function initSpriteTileSetter(tiles:Texture):Void
 	{
-		spritesBuffer = new TileBuffer(spriteCount, tiles, palettes);
+		spritesBuffer = new TileBuffer(spriteCount * 2, tiles, palettes);
 		spriteTiles = new TileCycle(spritesBuffer, spriteCount);
-		// sprites = [
-		// 	for (n in 0...spriteCount)
-		// 	{
-		// 		var f = new Tile(550, n * 8, 4, 1, 1, 32, 32);
-		// 		f.pivotX = 0.5;
-		// 		f.pivotY = 0.5;
-		// 		var b = new Tile(550, n * 8, 4, 1, 1, 32, 32);
-		// 		b.pivotX = 0.5;
-		// 		b.pivotY = 0.5;
-		// 		{
-		// 			tile: spriteTiles.addElement(f),
-		// 		}
-		// 	}
-		// ];
+		sprites = [
+			for (n in 0...spriteCount)
+			{
+				var f = new Tile(550, n * 8, 4, 1, 1, 32, 32);
+				f.pivotX = 0.5;
+				f.pivotY = 0.5;
+				var b = new Tile(550, n * 8, 4, 1, 1, 32, 32);
+				b.pivotX = 0.5;
+				b.pivotY = 0.5;
+				{
+					tile: spritesBuffer.addElement(f),
+				}
+			}
+		];
 	}
 
 	public function showTable(tileIndexes:Array<TileIndex>, palettes:Array<Int>, hazards:Array<Array<Tile>>)
@@ -351,41 +353,41 @@ class TileSetter
 		}
 	}
 
-	// public function sprite(pivot:Float = 0.5):Sprite
-	// {
-	// 	return sprites.get();
-	// 	var count = sprites.length;
-	// 	// get sprites from the front to the back
-	// 	while (count-- > 0)
-	// 	{
-	// 		var sprite = sprites[count];
-	// 		if (!sprite.isUsed)
-	// 		{
-	// 			sprite.isUsed = true;
-	// 			sprite.flipX(false);
-	// 			sprite.flipY(false);
-	// 			// sprite.changeTile(TileSetter.EmptySpriteId);
-	// 			// sprite.tile.pivotX = pivot;
-	// 			// sprite.tile.pivotY = pivot;
-	// 			return sprite;
-	// 		}
-	// 	}
-	// 	return null;
-	// }
+	public function sprite(pivot:Float = 0.5):SpriteLegacy
+	{
+		// return sprites.get();
+		var count = sprites.length;
+		// get sprites from the front to the back
+		while (count-- > 0)
+		{
+			var sprite = sprites[count];
+			if (!sprite.isUsed)
+			{
+				sprite.isUsed = true;
+				sprite.flipX(false);
+				sprite.flipY(false);
+				// sprite.changeTile(TileSetter.EmptySpriteId);
+				// sprite.tile.pivotX = pivot;
+				// sprite.tile.pivotY = pivot;
+				return sprite;
+			}
+		}
+		return null;
+	}
 
-	// public function resetSprites(playerSprite:Sprite)
-	// {
-	// 	// for (sprite in sprites)
-	// 	// {
-	// 	// 	if (sprite != playerSprite)
-	// 	// 	{
-	// 	// 		sprite.isUsed = false;
-	// 	// 		sprite.changeTile(TileSetter.EmptySpriteId);
-	// 	// 		sprite.tile.changeBgPalette(0);
-	// 	// 		sprite.move(-99, -99);
-	// 	// 	}
-	// 	// }
-	// }
+	public function resetSprites(playerSprite:Sprite)
+	{
+		// for (sprite in sprites)
+		// {
+		// 	if (sprite != playerSprite)
+		// 	{
+		// 		sprite.isUsed = false;
+		// 		sprite.changeTile(TileSetter.EmptySpriteId);
+		// 		sprite.tile.changeBgPalette(0);
+		// 		sprite.move(-99, -99);
+		// 	}
+		// }
+	}
 
 	public function reloadTextures(textureDatas:Array<TextureData>)
 	{
@@ -408,7 +410,6 @@ class TileSetter
 	// {
 	// 	return sprites.filter(sprite -> sprite.isUsed).length;
 	// }
-
 	var paletteDebug:QuadBuffer;
 
 	public function debug(uncoloredDisplay:Display)
@@ -416,29 +417,32 @@ class TileSetter
 		palettes.debug(uncoloredDisplay, colorsDisplay);
 	}
 
-	public function setLevelTile(col:Int, row:Int, tile:TileIndex, isFlipped:Bool)
+	public function setLevelTile(col:Int, row:Int, tile:TileIndex, isFlipped:Bool, paletteIndex:Int)
 	{
 		var i = Nametable.tileCols.index(col, row);
 		var back = levelBack.getElement(i);
 		back.isFlippedX = isFlipped;
+		back.changeBgPalette(paletteIndex);
 		var front = levelFront.getElement(i);
 		front.isFlippedX = isFlipped;
+		front.changeBgPalette(paletteIndex);
 
 		if (tile.layer() == 0) // tile is background
 		{
 			back.tile = tile.index();
-			front.tile = TileSetter.EmptySpriteId;
+			front.tile = 0; // TileSetter.EmptySpriteId;
 		}
 		else
 		{
-			back.tile = TileSetter.EmptySpriteId;
+			back.tile = 0; // TileSetter.EmptySpriteId;
 			front.tile = tile.index();
 		}
 	}
 
-	public function setSpriteTiles(sprite:Sprite){
-		sprite.draw(spriteTiles.setTile);
-	}
+	// public function setSpriteTiles(sprite:Sprite)
+	// {
+	// 	sprite.drawFree(spriteTiles.setTile);
+	// }
 }
 
 function expandArray(blocks:Array<Int>, blockWidth:Int = 16):Vector<Int>
@@ -471,20 +475,33 @@ function expandArray(blocks:Array<Int>, blockWidth:Int = 16):Vector<Int>
 }
 
 @:publicFields
-class Sprite
+class Sprite extends Mosaic
 {
-	private var mosaic:Mosaic;
-	private var paletteIndex:Int;
+	var x(get, set):Float;
 
-	public function new(mosaic:Mosaic, paletteIndex:Int){
-		this.mosaic = mosaic;
-		this.paletteIndex = paletteIndex;
+	function get_x():Float
+		return footprint.x;
+
+	function set_x(value:Float):Float
+		return footprint.x = value;
+
+	var y(get, never):Float;
+
+	function get_y():Float
+		return footprint.y;
+
+	function set_y(value:Float):Float
+		return footprint.y = value;
+
+	public function new(footprint:Rectangle, tileSize:Int = 8, defaultTile:Int = 4)
+	{
+		super(footprint, tileSize, defaultTile);
 	}
 
 	function move(x:Float, y:Float)
 	{
-		mosaic.footprint.x = Math.round(x) - mosaic.footprint.mid_width;
-		mosaic.footprint.y = Math.round(y) - mosaic.footprint.mid_height;
+		footprint.x = Math.round(x) - footprint.mid_width;
+		footprint.y = Math.round(y) - footprint.mid_height;
 	}
 
 	function changePalette(index:Int)
@@ -492,14 +509,14 @@ class Sprite
 		this.paletteIndex = index;
 	}
 
-	function changeTiles(tiles:Array<Int>)
-	{
-		mosaic.arrange(tiles);
-	}
+	// function changeTiles(tiles:Array<Int>)
+	// {
+	// 	mosaic.arrange(tiles);
+	// }
 
 	function flipX(isFlipped:Bool)
 	{
-		mosaic.isFlipped = isFlipped;
+		this.isFlipped = isFlipped;
 	}
 
 	function flipY(isFlipped:Bool)
@@ -507,11 +524,20 @@ class Sprite
 		// todo :-s
 	}
 
-	public function draw(setFreeTile:(x:Int, y:Int, tileIndex:TileIndex, isFlipped:Bool, paletteIndex:Int) -> Void){
-		mosaic.drawFree(setFreeTile);
-	}
-}
+	// public function draw(setFreeTile:(x:Int, y:Int, tileIndex:TileIndex, isFlipped:Bool, paletteIndex:Int) -> Void)
+	// {
+	// 	mosaic.drawFree(setFreeTile);
+	// }
 
+	// public function changeAnimation(s:String) {
+	// 	throw new haxe.exceptions.NotImplementedException();
+	// }
+
+	// public function clearTiles()
+	// {
+	// 	mosaic.clear();
+	// }
+}
 
 class TileCycle extends Cycle<Tile>
 {
@@ -525,17 +551,54 @@ class TileCycle extends Cycle<Tile>
 
 	public function clear()
 	{
-		for (tile in items) {
+		for (tile in items)
+		{
 			tile.tile = 0;
 		}
 	}
 
-	public function setTile(x:Int, y:Int, tileIndex:TileIndex, isFlipped:Bool, paletteIndex:Int):Void{
+	public function setTile(x:Int, y:Int, tileIndex:TileIndex, isFlipped:Bool, paletteIndex:Int):Void
+	{
 		var tile = get();
 		tile.tile = tileIndex.index();
 		tile.isFlippedX = isFlipped;
 		tile.changeFgPalette(paletteIndex);
 		tile.x = x;
 		tile.y = y;
+	}
+}
+
+@:structInit
+@:publicFields
+class SpriteLegacy
+{
+	var tile:Tile;
+	var isUsed:Bool = false;
+
+	function move(x:Float, y:Float)
+	{
+		tile.x = Math.round(x);
+		tile.y = Math.round(y);
+	}
+
+	function changePalette(index:Int)
+	{
+		// Bg palette is not technically available for Sprites so use Fg palette
+		tile.changeFgPalette(index);
+	}
+
+	function changeTile(index:Int)
+	{
+		tile.tile = index;
+	}
+
+	function flipX(isFlipped:Bool)
+	{
+		tile.isFlippedX = isFlipped;
+	}
+
+	function flipY(isFlipped:Bool)
+	{
+		tile.isFlippedY = isFlipped;
 	}
 }

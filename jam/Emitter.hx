@@ -1,4 +1,6 @@
-import nes.Tiles;
+import nes.Tiles.TileSetter;
+import nes.Tiles.SpriteLegacy as Sprite;
+
 import kiss.util.Math;
 
 using kiss.util.Math.Grid2d;
@@ -59,8 +61,10 @@ abstract class Emitter
 		{
 			var x = lerp(p.x_old, p.x, t);
 			var y = lerp(p.y_old, p.y, t);
-			var next_x = p.x < p.x_old ? Math.ceil(x) : Math.floor(x);
-			var next_y = p.y < p.y_old ? Math.ceil(y) : Math.floor(y);
+			// var next_x = p.x < p.x_old ? Math.ceil(x) : Math.floor(x);
+			// var next_y = p.y < p.y_old ? Math.ceil(y) : Math.floor(y);
+			var next_x = Math.round(x);
+			var next_y = Math.round(y);
 			p.sprite.move(next_x, next_y);
 		}
 	}
@@ -123,7 +127,7 @@ class Bubbler extends Emitter
 		}
 
 		sprite.changeTile(49);
-		sprite.tile.changeBgPalette(0);
+		sprite.changePalette(0);
 
 		var particle = new Particle(x_start, y_start, sprite);
 		particle.velX = 0.0;

@@ -63,18 +63,18 @@ class TestMosaics extends Application
 		]);
 		scenery.drawToLevel(tiles.setLevelTile);
 
-		// sprite for moving around to check background/foreground
-		var sprite = tiles.sprite();
-		if (sprite == null)
-		{
-			trace("this shouldn't happen because we have not used any sprites yet...");
-		}
-		else
-		{
-			sprite.changeTile(1);
-			sprite.changePalette(2);
-			window.onMouseMove.add((x, y) -> sprite.move(x / peoteView.zoom, y / peoteView.zoom));
-		}
+		// // sprite for moving around to check background/foreground
+		// var sprite = tiles.sprite();
+		// if (sprite == null)
+		// {
+		// 	trace("this shouldn't happen because we have not used any sprites yet...");
+		// }
+		// else
+		// {
+		// 	sprite.changeTile(1);
+		// 	sprite.changePalette(2);
+		// 	window.onMouseMove.add((x, y) -> sprite.move(x / peoteView.zoom, y / peoteView.zoom));
+		// }
 
 		var ldtk_data = new LdtkData();
 		var level = ldtk_data.worlds[0].levels[5];

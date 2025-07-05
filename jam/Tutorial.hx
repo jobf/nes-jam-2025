@@ -1,6 +1,8 @@
 import nes.Tiles;
 import kiss.util.Math;
 import peote.view.text.Text;
+import nes.Tiles.SpriteLegacy as Sprite;
+
 using kiss.util.Math.ValueExtensions;
 
 class Tutorial

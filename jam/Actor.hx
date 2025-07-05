@@ -1,3 +1,5 @@
+import kiss.util.Rectangle;
+import nes.Nametable;
 import nes.Tiles;
 import kiss.graphics.AnimateTile;
 import kiss.physics.Movement;
@@ -21,7 +23,7 @@ class Actor
 
 	public var isReachedGoal:Bool = false;
 
-	var animation:AnimateTile;
+	var animation:AnimateMosaic;
 
 	public var isOverlappingEntity:Bool;
 
@@ -38,13 +40,20 @@ class Actor
 	var is_jumping:Bool = false;
 	var jump_velocity:Float = -0.85;
 
-	public function new(sprite:Sprite, grid_x:Int, grid_y:Int, cell_size_px:Int, stats:EntityStats, getCollisionId:(grid_x:Int, grid_y:Int) -> Int)
+	public function new(animations:Map<String, MosaicConfig>, col:Int, row:Int, width:Float, height:Float, cell_size_px:Int, stats:EntityStats, getCollisionId:(grid_x:Int, grid_y:Int) -> Int)
 	{
-		this.sprite = sprite;
-		sprite.changeTile(0);
-		sprite.isUsed = true;
-		sprite.tile.pivotX = 0.5;
-		sprite.tile.pivotY = 0.5;
+		this.sprite = new Sprite({
+			x: col * cell_size_px,
+			y: row * cell_size_px,
+			width: width,
+			height: height
+		});
+
+		animation = new AnimateMosaic(animations, sprite);
+		// sprite.changeTile(0);
+		// sprite.isUsed = true;
+		// sprite.tile.pivotX = 0.5;
+		// sprite.tile.pivotY = 0.5;
 		
 		var config:JumpConfig = {
 			height_tiles_max: stats.jumpHeightTilesMax,
@@ -52,31 +61,33 @@ class Actor
 			buffer_step_count: stats.jumpFramesBuffer,
 			coyote_step_count: stats.jumpFramesCoyote
 		}
-		movement = new PlatformerMovement(grid_x, grid_y, cell_size_px, getCollisionId);
-		var anims:Map<String, TileConfig> = [
-			"idle" => {
-				frames: [0],
-				frame_rate: 1000
-			},
-			"jump" => {
-				mode: FRAME,
-				frames: [8],
-				frame_rate: msToFrames(Std.int((1 / 1) * 1000))
-			},
-			"walk" => {
-				frames: [1, 2, 3],
-				frame_rate: msToFrames(Std.int((1 / 6) * 1000))
-			},
-			"kiss" => {
-				frames: range(24, 24 + 5),
-				frame_rate: msToFrames(Std.int((1 / 12) * 1000))
-			}
-		];
+		movement = new PlatformerMovement(col, row, cell_size_px, getCollisionId);
+		// var anims:Map<String, TileConfig> = [
+		// 	"Hero" => {
+		// 		frames: [0],
+		// 		frame_rate: 1000
+		// 	},
+		// 	"Hero_Jump" => {
+		// 		mode: FRAME,
+		// 		frames: [8],
+		// 		frame_rate: msToFrames(Std.int((1 / 1) * 1000))
+		// 	},
+		// 	"Hero_Walk" => {
+		// 		frames: [1, 2, 3],
+		// 		frame_rate: msToFrames(Std.int((1 / 6) * 1000))
+		// 	},
+		// 	"Hero_Kiss" => {
+		// 		frames: range(24, 24 + 5),
+		// 		frame_rate: msToFrames(Std.int((1 / 12) * 1000))
+		// 	}
+		// ];
 
-		animation = new AnimateTile(anims, tile_index ->
-		{
-			sprite.changeTile(tile_index);
-		});
+		// todo!!
+		// animation = new AnimateMosaic(animations, sprite.changeTiles)
+		// animation = new AnimateTile(anims, tile_index ->
+		// {
+		// 	sprite.changeTile(tile_index);
+		// });
 
 		movement.position.x_previous = movement.position.x;
 		movement.position.y_previous = movement.position.y;
@@ -101,14 +112,14 @@ class Actor
 		movement.update();
 	}
 
-	public function draw(step_ratio:Float)
+	public function draw(step_ratio:Float, setFreeTile:(x:Int, y:Int, tileIndex:TileIndex, isFlipped:Bool, paletteIndex:Int) -> Void)
 	{
 		var x = lerp(movement.position.x_previous, movement.position.x, step_ratio);
 		var y = lerp(movement.position.y_previous, movement.position.y, step_ratio) + sprite_offset_y;
-
 		sprite.move(x, y);
 
 		sprite.flipX(facing != 1);
+		sprite.drawFree(setFreeTile);
 	}
 
 	public function move_in_direction_x(direction:Int)
@@ -120,7 +131,7 @@ class Actor
 
 		if (!isOverlappingEntity)
 		{
-			animation.play_animation("walk");
+			animation.play_animation("Hero_Walk");
 		}
 	}
 
@@ -131,14 +142,14 @@ class Actor
 
 		if (!isOverlappingEntity)
 		{
-			animation.play_animation("idle");
+			animation.play_animation("Hero");
 		}
 	}
 
 	public function jump()
 	{
 		movement.press_jump();
-		animation.play_animation("jump");
+		animation.play_animation("Hero_Jump");
 	}
 
 	public function drop()
@@ -146,11 +157,11 @@ class Actor
 		movement.release_jump();
 		if (isMovementHeld)
 		{
-			animation.play_animation("walk");
+			animation.play_animation("Hero_Walk");
 		}
 		else
 		{
-			animation.play_animation("idle");
+			animation.play_animation("Hero");
 		}
 	}
 

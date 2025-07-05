@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
 	
-	<meta title="kiss" package="kiss" version="0.1.0" company="v_v" />
+	<meta title="Hero_Kiss" package="Hero_Kiss" version="0.1.0" company="v_v" />
 	
 	<android target-sdk-version="28" />
 	<!-- <meta build-number="714" /> --> <!-- let set the buildnumber manual (android) -->
@@ -21,9 +21,10 @@
 	<!-- <app main="Test" path="_dist-test" file="Main" /> -->
 	<app main="Main" path="_dist" file="Main" />
 	<app main="Main" path="_distWin" file="Main" if="windows"/>
-	<!-- <app main="TestPaletteMaps" path="_dist" file="Main" /> -->
-	<!-- <app main="TestMosaics" path="_dist" file="Main" /> -->
-	<!-- <app main="TestSprites" path="_dist" file="Main" /> -->
+	<!-- <app main="TestPaletteMaps" path="_test" file="Main" /> -->
+	<!-- <app main="TestMosaics" path="_test" file="Main" /> -->
+	<!-- <app main="TestSprites" path="_test" file="Main" /> -->
+	<app main="TestActors" path="_test" file="Main" />
 	<!-- <define name="stats" if="html5" /> -->
 	
 	<!-- <source path="poth" /> -->
@@ -54,7 +55,7 @@
 	<haxedef name="peoteview_instancedrawing" />
 	<haxedef name="peoteview_vertexarrayobjects" />
 
-	<haxelib name="kiss" path="haxelib" />
+	<haxelib name="Hero_Kiss" path="haxelib" />
 	<haxelib name="nes" path="hl2" />
 
 	<!--<haxedef name="peoteview_debug_macro" />-->

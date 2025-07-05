@@ -1,4 +1,5 @@
 _dist*
+_test*
 scratch
 secrets
 bin

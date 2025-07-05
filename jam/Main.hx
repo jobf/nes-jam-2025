@@ -130,13 +130,14 @@ class Main extends App
 			// speedHorizontal: 0,
 			// frictionHorizontal: 0
 		}
+		var animations = read_animations(hotReload.ldtk_data.worlds[0].levels[0].l_Entities.all_Animation, hotReload.ldtk_data.worlds[0].levels[0].l_Tiles);
 
-		player = new Actor(tiles.sprite(), -10, -10, 8, stats, getCollision);
+		player = new Actor(animations, -10, -10, 8, stats, getCollision);
 		#if debug
 		console.addLabel(() -> "x: " + player.movement.position.x);
 		console.addLabel(() -> "y: " + player.movement.position.y);
-		console.addLabel(() -> "s x: " + player.sprite.tileF.x);
-		console.addLabel(() -> "s y: " + player.sprite.tileF.y);
+		console.addLabel(() -> "s x: " + player.sprite.x);
+		console.addLabel(() -> "s y: " + player.sprite.y);
 		console.addLabel(() -> "col: " + Std.int(player.movement.position.grid_x));
 		console.addLabel(() -> "col % : " + Std.int(player.movement.position.grid_cell_ratio_x));
 		console.addLabel(() -> "row: " + Std.int(player.movement.position.grid_y));
@@ -149,7 +150,6 @@ class Main extends App
 		// console.addLabel(() -> "D: " + player.movement.neighbours.is_wall_down);
 		// console.addLabel(() -> "H: " + player.movement.neighbours.wall_here);
 		console.addLabel(() -> "breathes remaining: " + breathsRemaining);
-		console.addLabel(() -> "sprites remaining: " + (64 - tiles.countActive()));
 		var collisionColors:Map<Int, Color> = [0 => 0x10101010, 1 => 0xa0a090a0, 2 => 0xd05050a0];
 		console.addTilemap(32, 30, 8, getCollision, collisionColors);
 		tiles.debug(console.display);
@@ -326,8 +326,8 @@ class Main extends App
 							collectBubble();
 						}
 				}
-
-				var animation = new AnimateMosaic([animationName => animations[animationName]], tiles.setLevelTile, hotspotDef.cx, hotspotDef.cy);
+				var mosaic = new Mosaic(footprint);
+				var animation = new AnimateMosaic(animations, mosaic);
 				new Hotspot(footprint, animation, duration, hotspotDef.f_HotspotStyle, onUnlock);
 			}
 		];
@@ -399,7 +399,7 @@ class Main extends App
 				sprite.changePalette(0);
 			}
 			sprite.move(x, y);
-			bubblesCollected.push(sprite);
+			// bubblesCollected.push(sprite); todo!!
 		}
 	}
 
@@ -435,7 +435,7 @@ class Main extends App
 
 					// spend a collected bubble
 					var sprite = bubblesCollected.pop();
-					sprite.changeTile(TileSetter.EmptySpriteId);
+					sprite.clear();
 					sprite.changePalette(0);
 
 				case SOAP:
@@ -456,7 +456,7 @@ class Main extends App
 
 						// spend a collected bubble
 						var sprite = bubblesCollected.pop();
-						sprite.changeTile(TileSetter.EmptySpriteId);
+						sprite.clear();
 						sprite.changePalette(3);
 					}
 			}
@@ -533,7 +533,7 @@ class Main extends App
 					}
 					else
 					{
-						player.animation.play_animation("idle");
+						player.animation.play_animation("Hero");
 
 						// next state
 						state = WAIT;
@@ -706,7 +706,7 @@ class Main extends App
 							if (spot.isLocked)
 							{
 								// frog is being kissed, play animation and emit kiss sprites
-								player.animation.play_animation("kiss");
+								player.animation.play_animation("Hero_Kiss");
 								kisser.x_start = spot.footprint.center_x;
 								kisser.y_start = spot.footprint.center_y - 10;
 								kissEmit.remaining--;
@@ -859,7 +859,7 @@ class Main extends App
 
 		if (state == PLAY)
 		{
-			player.draw(t);
+			player.draw(t, tiles.spriteTiles.setTile);
 			bubbler.draw(t);
 			breather.draw(t);
 			soaper.draw(t);

@@ -1,10 +1,8 @@
-import haxe.ds.Vector;
+import kiss.util.Rectangle;
 import kiss.graphics.Palette;
 import kiss.graphics.PeoteView;
-import kiss.util.Cycle;
 import lime.app.Application;
 import lime.utils.Assets;
-import nes.Nametable.TileIndex;
 import nes.Palette;
 import nes.Tiles;
 import peote.view.Display;
@@ -46,18 +44,18 @@ class TestSprites extends Application
 			128, 129
 		]);
 
-		var mosaicS = new Mosaic({
+		var sprite = new Sprite({
 			x: 0,
 			y: 0,
 			width: 16,
 			height: 16
 		});
 
-		var sprite = new Sprite(mosaicS, 0);
-		sprite.changeTiles([
+		sprite.arrange([
 			 64, 65,
 			128, 129
 		]);
+
 		var sprites = [sprite];
 
 		onUpdate.add(i ->
@@ -70,7 +68,7 @@ class TestSprites extends Application
 			// draw sprites using tiles from the cycle
 			for (sprite in sprites)
 			{
-				sprite.draw(cycle.setTile);
+				sprite.drawFree(cycle.setTile);
 			}
 
 			// update gpu

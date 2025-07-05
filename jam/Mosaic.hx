@@ -34,7 +34,7 @@ class Mosaic
 		}
 	}
 
-	public function drawToLevel(setLevelTile:(col:Int, row:Int, tileIndex:TileIndex, isFlipped:Bool) -> Void)
+	public function drawToLevel(setLevelTile:(col:Int, row:Int, tileIndex:TileIndex, isFlipped:Bool, paletteIndex:Int) -> Void)
 	{
 		var column = Std.int(footprint.left / tileSize);
 		var row = Std.int(footprint.top / tileSize);
@@ -44,7 +44,7 @@ class Mosaic
 		{
 			var r = row + cols.row(n);
 			var c = column + colOffset;
-			setLevelTile(c, r, tiles[n], isFlipped);
+			setLevelTile(c, r, tiles[n], isFlipped, paletteIndex);
 			var direction = isFlipped ? -1 : 1;
 			colOffset = (colOffset + direction).wrap(cols);
 		}
@@ -65,6 +65,12 @@ class Mosaic
 			setFreeTile(x, y, tiles[n], isFlipped, paletteIndex);
 			var direction = isFlipped ? -1 : 1;
 			colOffset = (colOffset + direction).wrap(cols);
+		}
+	}
+
+	public function clear() {
+		for (i in 0...tiles.length) {
+			tiles[i] = 0;
 		}
 	}
 }
