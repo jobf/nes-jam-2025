@@ -34,7 +34,7 @@ class TestMosaics extends Application
 			width: 32,
 			height: 32
 		});
-		scenery.draw(tiles.setLevelTile);
+		scenery.drawToLevel(tiles.setLevelTile);
 
 		/** this will be foreground scenery **/
 		var scenery = new Mosaic({
@@ -47,7 +47,7 @@ class TestMosaics extends Application
 			new TileIndex(1, 64), new TileIndex(1, 65),
 			new TileIndex(1, 128), new TileIndex(1, 129),
 		]);
-		scenery.draw(tiles.setLevelTile);
+		scenery.drawToLevel(tiles.setLevelTile);
 
 		/** this will be background scenery **/
 		var scenery = new Mosaic({
@@ -61,7 +61,7 @@ class TestMosaics extends Application
 			218, 219, 220, 221, 222, 223,
 			282, 283, 284, 285, 286, 287,
 		]);
-		scenery.draw(tiles.setLevelTile);
+		scenery.drawToLevel(tiles.setLevelTile);
 
 		// sprite for moving around to check background/foreground
 		var sprite = tiles.sprite();

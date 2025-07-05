@@ -77,7 +77,7 @@ class Tile implements Element
 
 	var OPTIONS = {blend: true};
 
-	function new(x:Float, y:Float, tile:Int, paletteIndex:Int = 0, paletteLayer:Int = 0, height:Float = 8, width:Float = 8)
+	function new(x:Float = 0, y:Float = 0, tile:Int = 0, paletteIndex:Int = 0, paletteLayer:Int = 0, height:Float = 8, width:Float = 8)
 	{
 		this.x = Std.int(x);
 		this.y = Std.int(y);

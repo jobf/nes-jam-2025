@@ -202,7 +202,6 @@ class AnimateMosaic
 			}
 		}
 	}
-
 	function set_isFlipped(value:Bool):Bool
 	{
 		isFlipped = value;
