@@ -12,11 +12,14 @@ Features of this graphically are...
 - tiles can be coloured using a range of 8 palettes
 - each palette has 3 colors and transparent
 - backgrounds are fixed grids of tiles
+- backgrounds are coloured in 4x4 tile regions
 
 I didn't finish all the features but it's still being worked on. Some of the todo list is...
 
 - sprites are formed from a finite pool of 64 tiles
 - animate background tiles
+- level chunking
+- camera scrolling
 - sound effects
 - background music (multi channel?)
 
@@ -64,3 +67,32 @@ lime test html5 -debug
 The release is html5 (for distribution on itch).
 
 There is a script `build-release.sh` for bundling the final html5 build into a zip. This script needs [ldtk-crush](https://github.com/jobf/ldtk-crush) to be installed.
+
+# Level data
+
+The level data is stored in `assets/levels.ldtk`. This is editable using [LDtk editor](https://ldtk.io/).
+
+Each level consists of the following layers.
+
+- tiles (the layout of the grpahical tiles on the level)
+- entities (e.g. Player entity)
+- palette (which palette to color 4x4 regions of the level)
+- front (should the level tiles be rendered in front of the entity sprites)
+
+Each layer can have it's own palettes selected.
+
+## Hot reload
+
+If you're running the hashlink target then the code will be "watching" the ldtk file in assets folder for changes.
+
+So you can edit a level in ldtk and then save the file and the game will reload the new data. It will also reload images at the same time, so you can change these on the fly too.
+
+## Config level
+
+This is level_0 and is used for configuration only.
+
+## Animations level
+
+This is currently level_5 and is used to configure animations.
+
+In the future I'll make a template where this is level_1, this feature came late on so I just the first level I didn't mind overwriting.
