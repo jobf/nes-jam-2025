@@ -10,32 +10,6 @@ import nes.Tiles;
 import peote.view.Display;
 import peote.view.Texture;
 
-class TileCycle extends Cycle<Tile>
-{
-	public function new(buffer:TileBuffer, size:Int)
-	{
-		super(Vector.fromArrayCopy([
-			for (n in 0...size)
-				buffer.addElement(new Tile())
-		]));
-	}
-
-	public function clear()
-	{
-		for (tile in items) {
-			tile.tile = 0;
-		}
-	}
-
-	public function setTile(x:Int, y:Int, tileIndex:TileIndex, isFlipped:Bool):Void{
-		var tile = get();
-		tile.tile = tileIndex.index();
-		tile.isFlippedX = isFlipped;
-		tile.x = x;
-		tile.y = y;
-	}
-}
-
 class TestSprites extends Application
 {
 	override function onPreloadComplete()
@@ -59,29 +33,44 @@ class TestSprites extends Application
 		buffer.addToDisplay(uncoloredDisplay);
 
 		var cycle = new TileCycle(buffer, 64);
-		var sprites:Array<Mosaic> = [];
 
-		var sprite = new Mosaic({
+		var mosaic = new Mosaic({
 			x: 0,
 			y: 0,
 			width: 16,
 			height: 16
 		});
 
-		sprite.arrange([
+		mosaic.arrange([
 			 64, 65,
 			128, 129
 		]);
-		sprites.push(sprite);
+
+		var mosaicS = new Mosaic({
+			x: 0,
+			y: 0,
+			width: 16,
+			height: 16
+		});
+
+		var sprite = new Sprite(mosaicS, 0);
+		sprite.changeTiles([
+			 64, 65,
+			128, 129
+		]);
+		var sprites = [sprite];
 
 		onUpdate.add(i ->
 		{
 			// set all sprite tiles to empty
 			cycle.clear();
 
+			mosaic.drawFree(cycle.setTile);
+
 			// draw sprites using tiles from the cycle
-			for (mosaic in sprites) {
-				mosaic.drawFree(cycle.setTile);
+			for (sprite in sprites)
+			{
+				sprite.draw(cycle.setTile);
 			}
 
 			// update gpu
@@ -90,8 +79,8 @@ class TestSprites extends Application
 
 		window.onMouseMove.add((x, y) ->
 		{
-			sprite.footprint.x = (x  / peoteView.zoom) - sprite.footprint.width / 2;
-			sprite.footprint.y = (y  / peoteView.zoom) - sprite.footprint.height / 2;
+			mosaic.footprint.x = (x / peoteView.zoom) - mosaic.footprint.mid_width;
+			mosaic.footprint.y = (y / peoteView.zoom) - mosaic.footprint.mid_height;
 		});
 
 		// window.onKeyDown.add((code, modifier) -> switch code

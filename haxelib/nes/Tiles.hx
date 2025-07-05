@@ -1,5 +1,6 @@
 package nes;
 
+import kiss.util.Cycle;
 import nes.Nametable;
 import nes.Palette;
 import peote.view.Buffer;
@@ -9,6 +10,7 @@ import peote.view.Element;
 import peote.view.Program;
 import peote.view.Texture;
 import peote.view.UniformFloat;
+
 
 @:publicFields
 class Tile implements Element
@@ -211,9 +213,9 @@ class TileSetter
 	var spriteCount = 64;
 	var nextSprite:Int;
 
-	public var sprites:Array<Sprite>;
-
-	var spriteTiles:TileBuffer;
+	
+	var spritesBuffer:TileBuffer;
+	public var spriteTiles:TileCycle;
 
 	public var palettes(default, null):PaletteMap;
 
@@ -263,7 +265,7 @@ class TileSetter
 		colorsDisplay.fbo.program.setColorFormula('mapToPalette(default_ID, palette_ID)');
 
 		levelBack.addToDisplay(colorsDisplay);
-		spriteTiles.addToDisplay(colorsDisplay);
+		spritesBuffer.addToDisplay(colorsDisplay);
 		levelFront.addToDisplay(colorsDisplay);
 		textOverlay.addToDisplay(colorsDisplay);
 	}
@@ -272,7 +274,7 @@ class TileSetter
 	{
 		levelBack.update();
 		levelFront.update();
-		spriteTiles.update();
+		spritesBuffer.update();
 		textOverlay.updateAll();
 	}
 
@@ -297,22 +299,22 @@ class TileSetter
 
 	inline function initSpriteTileSetter(tiles:Texture):Void
 	{
-		spriteTiles = new TileBuffer(spriteCount, tiles, palettes);
-
-		sprites = [
-			for (n in 0...spriteCount)
-			{
-				var f = new Tile(550, n * 8, 4, 1, 1, 32, 32);
-				f.pivotX = 0.5;
-				f.pivotY = 0.5;
-				var b = new Tile(550, n * 8, 4, 1, 1, 32, 32);
-				b.pivotX = 0.5;
-				b.pivotY = 0.5;
-				{
-					tile: spriteTiles.addElement(f),
-				}
-			}
-		];
+		spritesBuffer = new TileBuffer(spriteCount, tiles, palettes);
+		spriteTiles = new TileCycle(spritesBuffer, spriteCount);
+		// sprites = [
+		// 	for (n in 0...spriteCount)
+		// 	{
+		// 		var f = new Tile(550, n * 8, 4, 1, 1, 32, 32);
+		// 		f.pivotX = 0.5;
+		// 		f.pivotY = 0.5;
+		// 		var b = new Tile(550, n * 8, 4, 1, 1, 32, 32);
+		// 		b.pivotX = 0.5;
+		// 		b.pivotY = 0.5;
+		// 		{
+		// 			tile: spriteTiles.addElement(f),
+		// 		}
+		// 	}
+		// ];
 	}
 
 	public function showTable(tileIndexes:Array<TileIndex>, palettes:Array<Int>, hazards:Array<Array<Tile>>)
@@ -349,40 +351,41 @@ class TileSetter
 		}
 	}
 
-	public function sprite(pivot:Float = 0.5):Sprite
-	{
-		var count = sprites.length;
-		// get sprites from the front to the back
-		while (count-- > 0)
-		{
-			var sprite = sprites[count];
-			if (!sprite.isUsed)
-			{
-				sprite.isUsed = true;
-				sprite.flipX(false);
-				sprite.flipY(false);
-				sprite.changeTile(TileSetter.EmptySpriteId);
-				sprite.tile.pivotX = pivot;
-				sprite.tile.pivotY = pivot;
-				return sprite;
-			}
-		}
-		return null;
-	}
+	// public function sprite(pivot:Float = 0.5):Sprite
+	// {
+	// 	return sprites.get();
+	// 	var count = sprites.length;
+	// 	// get sprites from the front to the back
+	// 	while (count-- > 0)
+	// 	{
+	// 		var sprite = sprites[count];
+	// 		if (!sprite.isUsed)
+	// 		{
+	// 			sprite.isUsed = true;
+	// 			sprite.flipX(false);
+	// 			sprite.flipY(false);
+	// 			// sprite.changeTile(TileSetter.EmptySpriteId);
+	// 			// sprite.tile.pivotX = pivot;
+	// 			// sprite.tile.pivotY = pivot;
+	// 			return sprite;
+	// 		}
+	// 	}
+	// 	return null;
+	// }
 
-	public function resetSprites(playerSprite:Sprite)
-	{
-		for (sprite in sprites)
-		{
-			if (sprite != playerSprite)
-			{
-				sprite.isUsed = false;
-				sprite.changeTile(TileSetter.EmptySpriteId);
-				sprite.tile.changeBgPalette(0);
-				sprite.move(-99, -99);
-			}
-		}
-	}
+	// public function resetSprites(playerSprite:Sprite)
+	// {
+	// 	// for (sprite in sprites)
+	// 	// {
+	// 	// 	if (sprite != playerSprite)
+	// 	// 	{
+	// 	// 		sprite.isUsed = false;
+	// 	// 		sprite.changeTile(TileSetter.EmptySpriteId);
+	// 	// 		sprite.tile.changeBgPalette(0);
+	// 	// 		sprite.move(-99, -99);
+	// 	// 	}
+	// 	// }
+	// }
 
 	public function reloadTextures(textureDatas:Array<TextureData>)
 	{
@@ -397,14 +400,14 @@ class TileSetter
 		var tex = Texture.fromData(data);
 		tex.tilesX = Std.int(data.width / spriteSize);
 		tex.tilesY = Std.int(data.height / spriteSize);
-		spriteTiles.reloadTexture(tex);
+		spritesBuffer.reloadTexture(tex);
 		TileSetter.EmptySpriteId = tex.tilesX * tex.tilesY;
 	}
 
-	public function countActive():Int
-	{
-		return sprites.filter(sprite -> sprite.isUsed).length;
-	}
+	// public function countActive():Int
+	// {
+	// 	return sprites.filter(sprite -> sprite.isUsed).length;
+	// }
 
 	var paletteDebug:QuadBuffer;
 
@@ -431,6 +434,10 @@ class TileSetter
 			back.tile = TileSetter.EmptySpriteId;
 			front.tile = tile.index();
 		}
+	}
+
+	public function setSpriteTiles(sprite:Sprite){
+		sprite.draw(spriteTiles.setTile);
 	}
 }
 
@@ -463,37 +470,72 @@ function expandArray(blocks:Array<Int>, blockWidth:Int = 16):Vector<Int>
 	return tiles;
 }
 
-@:structInit
 @:publicFields
 class Sprite
 {
-	var tile:Tile;
-	var isUsed:Bool = false;
+	private var mosaic:Mosaic;
+	private var paletteIndex:Int;
+
+	public function new(mosaic:Mosaic, paletteIndex:Int){
+		this.mosaic = mosaic;
+		this.paletteIndex = paletteIndex;
+	}
 
 	function move(x:Float, y:Float)
 	{
-		tile.x = Math.round(x);
-		tile.y = Math.round(y);
+		mosaic.footprint.x = Math.round(x) - mosaic.footprint.mid_width;
+		mosaic.footprint.y = Math.round(y) - mosaic.footprint.mid_height;
 	}
 
 	function changePalette(index:Int)
 	{
-		// Bg palette is not technically available for Sprites so use Fg palette
-		tile.changeFgPalette(index);
+		this.paletteIndex = index;
 	}
 
-	function changeTile(index:Int)
+	function changeTiles(tiles:Array<Int>)
 	{
-		tile.tile = index;
+		mosaic.arrange(tiles);
 	}
 
 	function flipX(isFlipped:Bool)
 	{
-		tile.isFlippedX = isFlipped;
+		mosaic.isFlipped = isFlipped;
 	}
 
 	function flipY(isFlipped:Bool)
 	{
-		tile.isFlippedY = isFlipped;
+		// todo :-s
+	}
+
+	public function draw(setFreeTile:(x:Int, y:Int, tileIndex:TileIndex, isFlipped:Bool, paletteIndex:Int) -> Void){
+		mosaic.drawFree(setFreeTile);
+	}
+}
+
+
+class TileCycle extends Cycle<Tile>
+{
+	public function new(buffer:TileBuffer, size:Int)
+	{
+		super(Vector.fromArrayCopy([
+			for (n in 0...size)
+				buffer.addElement(new Tile())
+		]));
+	}
+
+	public function clear()
+	{
+		for (tile in items) {
+			tile.tile = 0;
+		}
+	}
+
+	public function setTile(x:Int, y:Int, tileIndex:TileIndex, isFlipped:Bool, paletteIndex:Int):Void{
+		var tile = get();
+		tile.tile = tileIndex.index();
+		tile.isFlippedX = isFlipped;
+		tile.changeFgPalette(paletteIndex);
+		tile.x = x;
+		tile.y = y;
 	}
 }

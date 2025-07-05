@@ -55,8 +55,21 @@ class Rectangle
 		return y + (height * 0.5);
 	}
 
-	public function isOverlap(x: Float, y: Float): Bool
+	var mid_width(get, never):Float;
+
+	private function get_mid_width():Float {
+		return width / 2;
+	}
+
+	var mid_height(get, never):Float;
+
+	private function get_mid_height():Float {
+		return height / 2;
+	}
+
+	function isOverlap(x: Float, y: Float): Bool
 	{
 		return left <= x && right >= x && top <= y && bottom >= y;
 	}
+
 }

@@ -11,6 +11,7 @@ class Mosaic
 	var rows:Int;
 	var tileSize:Int;
 	var tiles:Array<TileIndex>;
+	public var paletteIndex:Int= 0;
 
 	static var defaultTile:Int = 4; // yucky.. do we need to build this
 
@@ -49,7 +50,7 @@ class Mosaic
 		}
 	}
 
-	public function drawFree(setFreeTile:(x:Int, y:Int, tileIndex:TileIndex, isFlipped:Bool) -> Void)
+	public function drawFree(setFreeTile:(x:Int, y:Int, tileIndex:TileIndex, isFlipped:Bool, paletteIndex:Int) -> Void)
 	{
 		var column = 0;
 		var row = 0;
@@ -61,7 +62,7 @@ class Mosaic
 			var c = column + colOffset;
 			var x = Std.int(footprint.x + (c * tileSize));
 			var y = Std.int(footprint.y + (r * tileSize));
-			setFreeTile(x, y, tiles[n], isFlipped);
+			setFreeTile(x, y, tiles[n], isFlipped, paletteIndex);
 			var direction = isFlipped ? -1 : 1;
 			colOffset = (colOffset + direction).wrap(cols);
 		}
