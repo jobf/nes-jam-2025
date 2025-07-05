@@ -98,7 +98,6 @@ class Actor
 
 	public function update()
 	{
-		animation.step();
 
 		movement.position.x_previous = movement.position.x;
 		movement.position.y_previous = movement.position.y;
@@ -110,6 +109,7 @@ class Actor
 		}
 
 		movement.update();
+		animation.step();
 	}
 
 	public function draw(step_ratio:Float, setFreeTile:(x:Int, y:Int, tileIndex:TileIndex, isFlipped:Bool, paletteIndex:Int) -> Void)
@@ -117,7 +117,6 @@ class Actor
 		var x = lerp(movement.position.x_previous, movement.position.x, step_ratio);
 		var y = lerp(movement.position.y_previous, movement.position.y, step_ratio) + sprite_offset_y;
 		sprite.move(x, y);
-
 		sprite.flipX(facing != 1);
 		sprite.drawFree(setFreeTile);
 	}

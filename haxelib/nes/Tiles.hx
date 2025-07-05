@@ -275,8 +275,8 @@ class TileSetter
 	public function draw()
 	{
 		levelBack.update();
-		levelFront.update();
 		spritesBuffer.update();
+		levelFront.update();
 		textOverlay.updateAll();
 	}
 

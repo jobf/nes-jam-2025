@@ -132,7 +132,8 @@ class Main extends App
 		}
 		var animations = read_animations(hotReload.ldtk_data.worlds[0].levels[0].l_Entities.all_Animation, hotReload.ldtk_data.worlds[0].levels[0].l_Tiles);
 
-		player = new Actor(animations, -10, -10, 8, stats, getCollision);
+		player = new Actor(animations, -10, -10, 32, 32, 8, stats, getCollision);
+		player.animation.play_animation("Hero");
 		#if debug
 		console.addLabel(() -> "x: " + player.movement.position.x);
 		console.addLabel(() -> "y: " + player.movement.position.y);

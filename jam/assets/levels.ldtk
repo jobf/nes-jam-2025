@@ -11,7 +11,7 @@
 	"iid": "353256c0-3740-11f0-b9c8-cb26d040a30e",
 	"jsonVersion": "1.5.3",
 	"appBuildId": 473703,
-	"nextUid": 80,
+	"nextUid": 81,
 	"identifierStyle": "Capitalize",
 	"toc": [],
 	"worldLayout": "GridVania",
@@ -838,6 +838,43 @@
 					"regex": null,
 					"acceptFileTypes": null,
 					"defaultOverride": { "id": "V_Int", "params": [32] },
+					"textLanguageMode": null,
+					"symmetricalRef": false,
+					"autoChainRef": true,
+					"allowOutOfLevelRef": true,
+					"allowedRefs": "OnlySame",
+					"allowedRefsEntityUid": null,
+					"allowedRefTags": [],
+					"tilesetUid": null
+				},
+				{
+					"identifier": "FrameRate",
+					"doc": null,
+					"__type": "Int",
+					"uid": 80,
+					"type": "F_Int",
+					"isArray": false,
+					"canBeNull": false,
+					"arrayMinLength": null,
+					"arrayMaxLength": null,
+					"editorDisplayMode": "Hidden",
+					"editorDisplayScale": 1,
+					"editorDisplayPos": "Above",
+					"editorLinkStyle": "StraightArrow",
+					"editorDisplayColor": null,
+					"editorAlwaysShow": false,
+					"editorShowInWorld": true,
+					"editorCutLongValues": true,
+					"editorTextSuffix": null,
+					"editorTextPrefix": null,
+					"useForSmartColor": false,
+					"exportToToc": false,
+					"searchable": false,
+					"min": null,
+					"max": null,
+					"regex": null,
+					"acceptFileTypes": null,
+					"defaultOverride": null,
 					"textLanguageMode": null,
 					"symmetricalRef": false,
 					"autoChainRef": true,
@@ -6948,7 +6985,8 @@
 									"params": ["Frog"]
 								}] },
 								{ "__identifier": "FrameWidth", "__type": "Int", "__value": 32, "__tile": null, "defUid": 76, "realEditorValues": [] },
-								{ "__identifier": "FrameHeight", "__type": "Int", "__value": 32, "__tile": null, "defUid": 77, "realEditorValues": [] }
+								{ "__identifier": "FrameHeight", "__type": "Int", "__value": 32, "__tile": null, "defUid": 77, "realEditorValues": [] },
+								{ "__identifier": "FrameRate", "__type": "Int", "__value": 0, "__tile": null, "defUid": 80, "realEditorValues": [] }
 							],
 							"__worldX": 512,
 							"__worldY": 240
@@ -6971,7 +7009,8 @@
 									"params": ["Soap"]
 								}] },
 								{ "__identifier": "FrameWidth", "__type": "Int", "__value": 32, "__tile": null, "defUid": 76, "realEditorValues": [] },
-								{ "__identifier": "FrameHeight", "__type": "Int", "__value": 32, "__tile": null, "defUid": 77, "realEditorValues": [] }
+								{ "__identifier": "FrameHeight", "__type": "Int", "__value": 32, "__tile": null, "defUid": 77, "realEditorValues": [] },
+								{ "__identifier": "FrameRate", "__type": "Int", "__value": 0, "__tile": null, "defUid": 80, "realEditorValues": [] }
 							],
 							"__worldX": 512,
 							"__worldY": 272
@@ -6994,7 +7033,8 @@
 									"params": ["Bubble"]
 								}] },
 								{ "__identifier": "FrameWidth", "__type": "Int", "__value": 16, "__tile": null, "defUid": 76, "realEditorValues": [{ "id": "V_Int", "params": [16] }] },
-								{ "__identifier": "FrameHeight", "__type": "Int", "__value": 16, "__tile": null, "defUid": 77, "realEditorValues": [{ "id": "V_Int", "params": [16] }] }
+								{ "__identifier": "FrameHeight", "__type": "Int", "__value": 16, "__tile": null, "defUid": 77, "realEditorValues": [{ "id": "V_Int", "params": [16] }] },
+								{ "__identifier": "FrameRate", "__type": "Int", "__value": 0, "__tile": null, "defUid": 80, "realEditorValues": [] }
 							],
 							"__worldX": 512,
 							"__worldY": 304
@@ -7017,7 +7057,8 @@
 									"params": ["Unlock"]
 								}] },
 								{ "__identifier": "FrameWidth", "__type": "Int", "__value": 32, "__tile": null, "defUid": 76, "realEditorValues": [] },
-								{ "__identifier": "FrameHeight", "__type": "Int", "__value": 32, "__tile": null, "defUid": 77, "realEditorValues": [] }
+								{ "__identifier": "FrameHeight", "__type": "Int", "__value": 32, "__tile": null, "defUid": 77, "realEditorValues": [] },
+								{ "__identifier": "FrameRate", "__type": "Int", "__value": 0, "__tile": null, "defUid": 80, "realEditorValues": [] }
 							],
 							"__worldX": 576,
 							"__worldY": 272
@@ -7040,7 +7081,8 @@
 									"params": ["Hero"]
 								}] },
 								{ "__identifier": "FrameWidth", "__type": "Int", "__value": 32, "__tile": null, "defUid": 76, "realEditorValues": [] },
-								{ "__identifier": "FrameHeight", "__type": "Int", "__value": 32, "__tile": null, "defUid": 77, "realEditorValues": [] }
+								{ "__identifier": "FrameHeight", "__type": "Int", "__value": 32, "__tile": null, "defUid": 77, "realEditorValues": [] },
+								{ "__identifier": "FrameRate", "__type": "Int", "__value": 0, "__tile": null, "defUid": 80, "realEditorValues": [] }
 							],
 							"__worldX": 512,
 							"__worldY": 320
@@ -7063,7 +7105,8 @@
 									"params": ["Hero_Walk"]
 								}] },
 								{ "__identifier": "FrameWidth", "__type": "Int", "__value": 32, "__tile": null, "defUid": 76, "realEditorValues": [] },
-								{ "__identifier": "FrameHeight", "__type": "Int", "__value": 32, "__tile": null, "defUid": 77, "realEditorValues": [] }
+								{ "__identifier": "FrameHeight", "__type": "Int", "__value": 32, "__tile": null, "defUid": 77, "realEditorValues": [] },
+								{ "__identifier": "FrameRate", "__type": "Int", "__value": 160, "__tile": null, "defUid": 80, "realEditorValues": [{ "id": "V_Int", "params": [160] }] }
 							],
 							"__worldX": 544,
 							"__worldY": 320
@@ -7086,7 +7129,8 @@
 									"params": ["Hero_Jump"]
 								}] },
 								{ "__identifier": "FrameWidth", "__type": "Int", "__value": 32, "__tile": null, "defUid": 76, "realEditorValues": [] },
-								{ "__identifier": "FrameHeight", "__type": "Int", "__value": 32, "__tile": null, "defUid": 77, "realEditorValues": [] }
+								{ "__identifier": "FrameHeight", "__type": "Int", "__value": 32, "__tile": null, "defUid": 77, "realEditorValues": [] },
+								{ "__identifier": "FrameRate", "__type": "Int", "__value": 0, "__tile": null, "defUid": 80, "realEditorValues": [] }
 							],
 							"__worldX": 640,
 							"__worldY": 320
@@ -7109,7 +7153,8 @@
 									"params": ["Hero_Kiss"]
 								}] },
 								{ "__identifier": "FrameWidth", "__type": "Int", "__value": 32, "__tile": null, "defUid": 76, "realEditorValues": [] },
-								{ "__identifier": "FrameHeight", "__type": "Int", "__value": 32, "__tile": null, "defUid": 77, "realEditorValues": [] }
+								{ "__identifier": "FrameHeight", "__type": "Int", "__value": 32, "__tile": null, "defUid": 77, "realEditorValues": [] },
+								{ "__identifier": "FrameRate", "__type": "Int", "__value": 80, "__tile": null, "defUid": 80, "realEditorValues": [{ "id": "V_Int", "params": [80] }] }
 							],
 							"__worldX": 512,
 							"__worldY": 352

@@ -1,3 +1,4 @@
+import kiss.util.Math.msToFrames;
 import kiss.graphics.AnimateTile;
 import ldtk.Json;
 import ldtk.*;
@@ -169,8 +170,8 @@ function read_animations(definitions:Array<LdtkData.Entity_Animation>, tiles:ldt
 	{
 		var frames:Array<Array<Int>> = [];
 		var frameCount = Std.int(animation.width / animation.f_FrameWidth);
-		var frameColumns = Std.int(animation.f_FrameWidth / 8);
-		var frameRows = Std.int(animation.f_FrameHeight / 8);
+		var frameColumns = Std.int(animation.f_FrameWidth / tiles.gridSize);
+		var frameRows = Std.int(animation.f_FrameHeight / tiles.gridSize);
 
 		for (n in 0...frameCount)
 		{
@@ -196,9 +197,10 @@ function read_animations(definitions:Array<LdtkData.Entity_Animation>, tiles:ldt
 		}
 
 		animations.set(animation.f_Name, {
-			mode: ONCE_STEPPED,
+			// mode: ONCE_STEPPED,
 			frames: frames,
-			frame_columns: Std.int(animation.f_FrameWidth / tiles.gridSize)
+			frame_columns: Std.int(animation.f_FrameWidth / tiles.gridSize),
+			frame_rate: msToFrames(animation.f_FrameRate)
 		});
 		
 	}
