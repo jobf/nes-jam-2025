@@ -130,9 +130,10 @@ class Main extends App
 			// speedHorizontal: 0,
 			// frictionHorizontal: 0
 		}
-		var animations = read_animations(hotReload.ldtk_data.worlds[0].levels[0].l_Entities.all_Animation, hotReload.ldtk_data.worlds[0].levels[0].l_Tiles);
+		var animationsLevel = hotReload.ldtk_data.worlds[0].levels[5];
+		var mosaicAnims = read_animations(animationsLevel.l_Entities.all_Animation, animationsLevel.l_Tiles);
 
-		player = new Actor(animations, -10, -10, 32, 32, 8, stats, getCollision);
+		player = new Actor(mosaicAnims, -10, -10, 32, 32, 8, stats, getCollision);
 		player.animation.play_animation("Hero");
 		#if debug
 		console.addLabel(() -> "x: " + player.movement.position.x);
@@ -860,6 +861,7 @@ class Main extends App
 
 		if (state == PLAY)
 		{
+			tiles.spriteTiles.clear();
 			player.draw(t, tiles.spriteTiles.setTile);
 			bubbler.draw(t);
 			breather.draw(t);

@@ -28,7 +28,8 @@ class Mosaic
 
 	public function arrange(tiles:Array<TileIndex>)
 	{
-		for (n in 0...tiles.length)
+		trace(this.tiles.length);
+		for (n in 0...this.tiles.length)
 		{
 			this.tiles[n] = tiles[n];
 		}

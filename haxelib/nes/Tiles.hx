@@ -238,11 +238,12 @@ class TileSetter
 		tiles.tilesY = Std.int(data.height / TileBuffer.tileSize);
 		initLevelTileSetter(tiles);
 
-		var data = tilesTextureData[1];
-		var tex = Texture.fromData(data);
-		tex.tilesX = Std.int(data.width / spriteSize);
-		tex.tilesY = Std.int(data.height / spriteSize);
-		trace('sprites tilesX ${tex.tilesX}  tilesY ${tex.tilesY} ');
+		// var data = tilesTextureData[1];
+		// var tex = Texture.fromData(data);
+		// tex.tilesX = Std.int(data.width / spriteSize);
+		// tex.tilesY = Std.int(data.height / spriteSize);
+		// trace('sprites tilesX ${tex.tilesX}  tilesY ${tex.tilesY} ');
+		var tex = tiles;
 		initSpriteTileSetter(tex);
 		TileSetter.EmptySpriteId = tex.tilesX * tex.tilesY;
 		nextSprite = spriteCount;

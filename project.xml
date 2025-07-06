@@ -24,7 +24,7 @@
 	<!-- <app main="TestPaletteMaps" path="_test" file="Main" /> -->
 	<!-- <app main="TestMosaics" path="_test" file="Main" /> -->
 	<!-- <app main="TestSprites" path="_test" file="Main" /> -->
-	<app main="TestActors" path="_test" file="Main" />
+	<!-- <app main="TestActors" path="_test" file="Main" /> -->
 	<!-- <define name="stats" if="html5" /> -->
 	
 	<!-- <source path="poth" /> -->
