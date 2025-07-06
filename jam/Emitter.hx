@@ -1,3 +1,4 @@
+import nes.Nametable.TileIndex;
 import nes.Tiles.TileSetter;
 import nes.Tiles.SpriteLegacy as Sprite;
 
@@ -55,7 +56,7 @@ abstract class Emitter
 		}
 	}
 
-	public function draw(t:Float)
+	public function draw(t:Float, setFreeTile:(x:Int, y:Int, tileIndex:TileIndex, isFlipped:Bool, paletteIndex:Int) -> Void)
 	{
 		for (p in particles)
 		{
@@ -67,6 +68,7 @@ abstract class Emitter
 			var next_y = Math.round(y);
 			p.sprite.move(next_x, next_y);
 		}
+		
 	}
 
 	public function reset()

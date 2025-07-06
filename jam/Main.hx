@@ -329,8 +329,11 @@ class Main extends App
 						}
 				}
 				var mosaic = new Mosaic(footprint);
-				var animation = new AnimateMosaic(animations, mosaic);
-				new Hotspot(footprint, animation, duration, hotspotDef.f_HotspotStyle, onUnlock);
+				// var animation = new AnimateMosaic(animations, mosaic);
+				var spot = new Hotspot(mosaic, animations, duration, hotspotDef.f_HotspotStyle, onUnlock);
+				spot.animation.play_animation(animationName);
+				// spot.animation.step();
+				spot;
 			}
 		];
 	}
@@ -692,11 +695,13 @@ class Main extends App
 						continue;
 
 					spot.update();
+					spot.mosaic.drawFree(tiles.spriteTiles.setTile);
 
 					if (spot.style == FROG || spot.style == TUTOR && spot.isLocked)
 					{
-						var isFlipped = player.movement.position.x < spot.footprint.center_x;
-						spot.animation.isFlipped = isFlipped;
+						var isFlipped = player.movement.position.x < spot.mosaic.footprint.center_x;
+						// spot.animation.isFlipped = isFlipped;
+						spot.mosaic.isFlipped = isFlipped;
 					}
 
 					if (spot.overlap(player.movement.position.x, player.movement.position.y))
@@ -709,8 +714,8 @@ class Main extends App
 							{
 								// frog is being kissed, play animation and emit kiss sprites
 								player.animation.play_animation("Hero_Kiss");
-								kisser.x_start = spot.footprint.center_x;
-								kisser.y_start = spot.footprint.center_y - 10;
+								kisser.x_start = spot.mosaic.footprint.center_x;
+								kisser.y_start = spot.mosaic.footprint.center_y - 10;
 								kissEmit.remaining--;
 								if (kissEmit.remaining < 0)
 								{
@@ -856,19 +861,21 @@ class Main extends App
 
 	function draw(t:Float)
 	{
+
 		if (tiles == null || player == null)
 			return;
-
+		
+		tiles.spriteTiles.clear();
+		
 		if (state == PLAY)
 		{
-			tiles.spriteTiles.clear();
 			player.draw(t, tiles.spriteTiles.setTile);
-			bubbler.draw(t);
-			breather.draw(t);
-			soaper.draw(t);
-			kisser.draw(t);
+			bubbler.draw(t, tiles.spriteTiles.setTile);
+			breather.draw(t, tiles.spriteTiles.setTile);
+			soaper.draw(t, tiles.spriteTiles.setTile);
+			kisser.draw(t, tiles.spriteTiles.setTile);
 		}
-
+		
 		tiles.draw();
 
 		playerTracker.x = player.movement.position.x;

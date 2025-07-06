@@ -6,10 +6,11 @@ import nes.Tiles;
 
 class Hotspot
 {
-	public var footprint:Rectangle;
-
+	// public var footprint:Rectangle;
 	var stages:Int = 3;
+
 	public var tileStart:Int = 32;
+
 	var tileEnd:Int = 35;
 	var switchTileStart:Int = 56;
 	var switchTileEnd:Int = 57;
@@ -21,13 +22,21 @@ class Hotspot
 	var animateCountdown:Countdown;
 
 	var onUnlock:() -> Void;
-	public var style:Enum_HotspotStyle;
-	public var animation:AnimateMosaic;
 
-	public function new(footprint:Rectangle, animation:AnimateMosaic, duration:Int, style:Enum_HotspotStyle, onUnlock:() -> Void = null)
+	public var style:Enum_HotspotStyle;
+
+	var animations:Map<String, MosaicConfig>;
+
+	public var animation:AnimateMosaic;
+	public var mosaic:Mosaic;
+
+	public function new(mosaic:Mosaic, animations:Map<String, MosaicConfig>, duration:Int, style:Enum_HotspotStyle, onUnlock:() -> Void = null)
 	{
-		this.footprint = footprint;
-		this.animation = animation;
+		// this.footprint = footprint;
+		// this.animation = animation;
+		this.mosaic = mosaic;
+		animation = new AnimateMosaic(animations, mosaic);
+		// super(animations, col, row, width, height, cell_size);
 		this.style = style;
 		this.onUnlock = onUnlock;
 		animateCountdown = new Countdown(Std.int(duration / stages));
@@ -44,8 +53,9 @@ class Hotspot
 				animateCountdown.reset();
 			}
 
-			if(isLocked && animation.is_animation_ended){
-				if(style == BUBBLE)
+			if (isLocked && animation.is_animation_ended)
+			{
+				if (style == BUBBLE)
 				{
 					// todo - hide
 					// sprite.changeTile(TileSetter.EmptySpriteId);
@@ -60,9 +70,10 @@ class Hotspot
 
 	public function overlap(x:Float, y:Float):Bool
 	{
-		if(!isEnabled) return false;
+		if (!isEnabled)
+			return false;
 
-		var isOverlap = footprint.isOverlap(x, y);
+		var isOverlap = mosaic.footprint.isOverlap(x, y);
 		if (isLocked)
 		{
 			isActive = isOverlap;
@@ -70,8 +81,8 @@ class Hotspot
 		return isOverlap;
 	}
 
-
-	public function showInitialFrame() {
+	public function showInitialFrame()
+	{
 		animation.step();
 	}
 }
